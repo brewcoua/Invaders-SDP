@@ -9,11 +9,11 @@ import engine.DrawManager.SpriteType;
 
 /**
  * Implements a ship, to be controlled by the player.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
-public class Ship extends Entity {
+public abstract class Ship extends Entity {
 
 	/** Time between shots. */
 	private static final int SHOOTING_INTERVAL = 750;
@@ -21,7 +21,11 @@ public class Ship extends Entity {
 	private static final int BULLET_SPEED = -6;
 	/** Movement of the ship for each unit of time. */
 	private static final int SPEED = 2;
-	
+	/** Multipliers for the ship's properties. */
+	protected abstract ShipMultipliers getMultipliers();
+	/** Name of the ship. */
+	public abstract String getShipName();
+
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
@@ -29,18 +33,27 @@ public class Ship extends Entity {
 
 	/**
 	 * Constructor, establishes the ship's properties.
-	 * 
+	 *
 	 * @param positionX
 	 *            Initial position of the ship in the X axis.
 	 * @param positionY
 	 *            Initial position of the ship in the Y axis.
 	 */
-	public Ship(final int positionX, final int positionY) {
+	protected Ship(final int positionX, final int positionY) {
 		super(positionX, positionY, 13 * 2, 8 * 2, Color.GREEN);
 
 		this.spriteType = SpriteType.Ship;
-		this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
+		this.shootingCooldown = Core.getCooldown(
+				Math.round(SHOOTING_INTERVAL * getMultipliers().shootingInterval())
+		);
 		this.destructionCooldown = Core.getCooldown(1000);
+	}
+
+	/**
+	 * Types of ships available.
+	 */
+	public enum ShipType {
+		StarDefender
 	}
 
 	/**
@@ -48,7 +61,7 @@ public class Ship extends Entity {
 	 * reached.
 	 */
 	public final void moveRight() {
-		this.positionX += SPEED;
+		this.positionX += this.getSpeed();
 	}
 
 	/**
@@ -56,12 +69,12 @@ public class Ship extends Entity {
 	 * reached.
 	 */
 	public final void moveLeft() {
-		this.positionX -= SPEED;
+		this.positionX -= this.getSpeed();
 	}
 
 	/**
 	 * Shoots a bullet upwards.
-	 * 
+	 *
 	 * @param bullets
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
@@ -70,7 +83,8 @@ public class Ship extends Entity {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY, BULLET_SPEED));
+					positionY, Math.round(BULLET_SPEED * getMultipliers().bulletSpeed())
+			));
 			return true;
 		}
 		return false;
@@ -95,7 +109,7 @@ public class Ship extends Entity {
 
 	/**
 	 * Checks if the ship is destroyed.
-	 * 
+	 *
 	 * @return True if the ship is currently destroyed.
 	 */
 	public final boolean isDestroyed() {
@@ -104,10 +118,10 @@ public class Ship extends Entity {
 
 	/**
 	 * Getter for the ship's speed.
-	 * 
+	 *
 	 * @return Speed of the ship.
 	 */
 	public final int getSpeed() {
-		return SPEED;
+		return Math.round(SPEED * this.getMultipliers().speed());
 	}
 }
