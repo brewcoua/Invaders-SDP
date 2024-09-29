@@ -4,10 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-import engine.Cooldown;
-import engine.Core;
-import engine.GameSettings;
-import engine.GameState;
+import engine.*;
 import entity.Bullet;
 import entity.BulletPool;
 import entity.EnemyShip;
@@ -56,6 +53,8 @@ public class GameScreen extends Screen {
 	private Cooldown screenFinishedCooldown;
 	/** Set of all bullets fired by on screen ships. */
 	private Set<Bullet> bullets;
+	/** Current ship type. */
+	private ShipType shipType;
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -96,6 +95,7 @@ public class GameScreen extends Screen {
 		this.bonusLife = bonusLife;
 		this.level = gameState.getLevel();
 		this.score = gameState.getScore();
+		this.shipType = gameState.getShipType();
 		this.lives = gameState.getLivesRemaining();
 		if (this.bonusLife)
 			this.lives++;
@@ -108,6 +108,7 @@ public class GameScreen extends Screen {
 	 */
 	public final void initialize() {
 		super.initialize();
+		// TODO: Use the ship type to affect the ship's properties.
 
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
 		enemyShipFormation.attach(this);
@@ -335,7 +336,7 @@ public class GameScreen extends Screen {
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
-		return new GameState(this.level, this.score, this.lives,
+		return new GameState(this.level, this.score, this.shipType, this.lives,
 				this.bulletsShot, this.shipsDestroyed);
 	}
 }

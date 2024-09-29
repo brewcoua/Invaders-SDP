@@ -80,6 +80,7 @@ public final class Core {
 	 *            Program args, ignored.
 	 */
 	public static void main(final String[] args) {
+		List<ShipType> shipTypes = new ArrayList<ShipType>();
 		try {
 			LOGGER.setUseParentHandlers(false);
 
@@ -93,6 +94,7 @@ public final class Core {
 			LOGGER.addHandler(consoleHandler);
 			LOGGER.setLevel(Level.ALL);
 
+			shipTypes = getFileManager().loadShips();
 		} catch (Exception e) {
 			// TODO handle exception
 			e.printStackTrace();
@@ -116,7 +118,7 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+			gameState = new GameState(1, 0, shipTypes.getFirst(), MAX_LIVES, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -147,6 +149,7 @@ public final class Core {
 
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
+							gameState.getShipType(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed());

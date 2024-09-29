@@ -135,6 +135,43 @@ public final class FileManager {
 	}
 
 	/**
+	 * Loads the list of ship types from disk.
+	 * @return List of ship types.
+	 * @throws IOException In case of loading problems.
+	 */
+	public List<ShipType> loadShips() throws IOException {
+		List<ShipType> shipTypes = new ArrayList<ShipType>();
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("ships");
+			if (inputStream == null)
+				throw new FileNotFoundException("ships file not found.");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			// Format is one ship per line, with the following values separated by commas:
+			// unique_id,Ship Name,life,shootingInterval,bulletSpeed,speed
+
+			String line = reader.readLine();
+
+			while (line != null) {
+				String[] values = line.split(",");
+				ShipType shipType = new ShipType(values[0], values[1], Integer.parseInt(values[2]),
+						Integer.parseInt(values[3]), Integer.parseInt(values[4]), Integer.parseInt(values[5]));
+				shipTypes.add(shipType);
+				line = reader.readLine();
+			}
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return shipTypes;
+	}
+
+	/**
 	 * Returns the application default scores if there is no user high scores
 	 * file.
 	 * 
