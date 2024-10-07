@@ -12,63 +12,64 @@ import engine.DrawManager.SpriteType;
  */
 public class Bullet extends Entity {
 
-	/**
-	 * Speed of the bullet, positive or negative depending on direction -
-	 * positive is down.
-	 */
-	private int speed;
+    /**
+     * Speed of the bullet, positive or negative depending on direction -
+     * positive is down.
+     */
+    private double speed;
 
-	/**
-	 * Constructor, establishes the bullet's properties.
-	 * 
-	 * @param positionX
-	 *            Initial position of the bullet in the X axis.
-	 * @param positionY
-	 *            Initial position of the bullet in the Y axis.
-	 * @param speed
-	 *            Speed of the bullet, positive or negative depending on
-	 *            direction - positive is down.
-	 */
-	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
+    private static final int FPS = 60;
 
-		this.speed = speed;
-		setSprite();
-	}
+    /**
+     * Constructor, establishes the bullet's properties.
+     * 
+     * @param positionX Initial position of the bullet in the X axis.
+     * @param positionY Initial position of the bullet in the Y axis.
+     * @param isEnemy   If true, the bullet belongs to the enemy; otherwise, it belongs to the player.
+     */
+    public Bullet(final int positionX, final int positionY, final boolean isEnemy) {
+        // Bullet speed set to 60 pixels per second
+        super(positionX, positionY, 3 * 2, 5 * 2, isEnemy ? Color.RED : Color.GREEN);
+        this.speed = isEnemy ? 60.0 / FPS : -60.0 / FPS; // 60 pixels per second
+        setSprite();
+    }
 
-	/**
-	 * Sets correct sprite for the bullet, based on speed.
-	 */
-	public final void setSprite() {
-		if (speed < 0)
-			this.spriteType = SpriteType.Bullet;
-		else
-			this.spriteType = SpriteType.EnemyBullet;
-	}
+    /**
+     * Sets the correct sprite for the bullet based on its speed.
+     */
+    public final void setSprite() {
+        if (speed < 0) {
+            this.spriteType = SpriteType.Bullet;
+            this.color = Color.GREEN; // Player bullet is green
+        } else {
+            this.spriteType = SpriteType.EnemyBullet;
+            this.color = Color.RED; // Enemy bullet is red
+        }
+    }
 
-	/**
-	 * Updates the bullet's position.
-	 */
-	public final void update() {
-		this.positionY += this.speed;
-	}
+    /**
+     * Updates the bullet's position.
+     */
+    @Override
+    public final void update() {
+        this.positionY += this.speed;
+    }
 
-	/**
-	 * Setter of the speed of the bullet.
-	 * 
-	 * @param speed
-	 *            New speed of the bullet.
-	 */
-	public final void setSpeed(final int speed) {
-		this.speed = speed;
-	}
+    /**
+     * Setter for the speed of the bullet.
+     * 
+     * @param speed New speed of the bullet.
+     */
+    public final void setSpeed(final double speed) {
+        this.speed = speed;
+    }
 
-	/**
-	 * Getter for the speed of the bullet.
-	 * 
-	 * @return Speed of the bullet.
-	 */
-	public final int getSpeed() {
-		return this.speed;
-	}
+    /**
+     * Getter for the speed of the bullet.
+     * 
+     * @return Speed of the bullet.
+     */
+    public final double getSpeed() {
+        return this.speed;
+    }
 }
