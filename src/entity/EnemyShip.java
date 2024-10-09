@@ -75,6 +75,7 @@ public class EnemyShip extends Entity {
 		super(-32, 60, 16 * 2, 7 * 2, Color.RED);
 
 		this.spriteType = SpriteType.EnemyShipSpecial;
+		this.animationCooldown = Core.getCooldown(100);
 		this.isDestroyed = false;
 		this.pointValue = BONUS_TYPE_POINTS;
 	}
@@ -132,6 +133,25 @@ public class EnemyShip extends Entity {
 			}
 		}
 	}
+	/**
+	 * Updates attributes, mainly used for boss animation purposes.
+	 */
+	public final void updateEnemyShipSpecial() {
+		if (this.animationCooldown != null && this.animationCooldown.checkFinished()) {
+			this.animationCooldown.reset();
+
+			switch (this.spriteType) {
+				case EnemyShipSpecial:
+					this.spriteType = SpriteType.EnemyShipSpecial2;
+					break;
+				case EnemyShipSpecial2:
+					this.spriteType = SpriteType.EnemyShipSpecial;
+					break;
+			}
+		}
+	}
+
+
 
 	/**
 	 * Destroys the ship, causing an explosion.
