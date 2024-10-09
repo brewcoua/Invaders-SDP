@@ -98,7 +98,8 @@ public final class DrawManager {
 		Ship3,
 		/** 4th player ship. */
 		Ship4,
->>>>>>> master
+		/** Bonus ship - second form. */
+		EnemyShipSpecial2
 	};
 
 	/**
