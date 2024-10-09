@@ -34,7 +34,7 @@ public class EnemyShipDiver extends EnemyShip {
      * Updates attributes, mainly used for animation purposes.
      */
     public final void update() {
-        if((this.state / 10) % 2 == 0) {
+        if((this.state / 10) % 2 == 0 && this.state != 2) {
             this.color = Color.WHITE;
         } else {
             this.color = Color.RED;

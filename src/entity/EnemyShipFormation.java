@@ -386,6 +386,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		for(int i = 0; i < this.enemyShipsDivers.size(); i++) {
 			EnemyShipDiver enemyShip = this.enemyShipsDivers.get(i);
 			int state = enemyShip.getState();
+
+			// Does not update destroyed ships
+			if(enemyShip.isDestroyed()) {
+				continue;
+			}
+
 			if(state == 2) { // Diving
 				if(enemyShip.getPositionY() > screen.getHeight()) {
 					enemyShip.setPositionY(0);
