@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 /**
  * Implements the game setting screen.
  * 
- * @author <a href="mailto:dayeon.dev@gmail.com">Dayeon Oh</a>
+ * Author: <a href="mailto:dayeon.dev@gmail.com">Dayeon Oh</a>
  * 
  */
 public class GameSettingScreen extends Screen {
@@ -16,7 +16,6 @@ public class GameSettingScreen extends Screen {
 	private static final int SELECTION_TIME = 200;
 	/** Maximum number of characters for player name. */
 	private static final int NAME_LIMIT = 6;
-
 
 	/** Player name1 for record input. */
 	private String name1;
@@ -32,7 +31,11 @@ public class GameSettingScreen extends Screen {
 	private final Cooldown selectionCooldown;
 
 	/** Total number of rows for selection. */
-	private static final int TOTAL_ROWS = 3; // Multiplayer, Difficulty, Start
+	private static final int TOTAL_ROWS = 4; // Updated to 4 for Multiplayer, Difficulty, Ship, Start
+	/** Selected ship index */
+	private int selectedShipIndex;
+	/** Total number of ships available */
+	private static final int TOTAL_SHIPS = 3; // Adjust this based on the actual number of ships
 
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
@@ -41,11 +44,11 @@ public class GameSettingScreen extends Screen {
 	 * Constructor, establishes the properties of the screen.
 	 *
 	 * @param width
-	 *            Screen width.
+	 *               Screen width.
 	 * @param height
-	 *            Screen height.
+	 *               Screen height.
 	 * @param fps
-	 *            Frames per second, frame rate at which the game is run.
+	 *               Frames per second, frame rate at which the game is run.
 	 */
 	public GameSettingScreen(final int width, final int height, final int fps) {
 		super(width, height, fps);
@@ -56,10 +59,12 @@ public class GameSettingScreen extends Screen {
 		this.isMultiplayer = false;
 
 		// row 1: difficulty level
-		this.difficultyLevel = 1; 	// 0: easy, 1: normal, 2: hard
+		this.difficultyLevel = 1; // 0: easy, 1: normal, 2: hard
+
+		// row 2: ship selection
+		this.selectedShipIndex = 0; // Default to the first ship
 
 		// row 3: start
-
 		this.selectedRow = 0;
 
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
@@ -73,7 +78,6 @@ public class GameSettingScreen extends Screen {
 	 */
 	public final int run() {
 		super.run();
-
 		return this.returnCode;
 	}
 
@@ -85,7 +89,7 @@ public class GameSettingScreen extends Screen {
 
 		draw();
 		if (this.inputDelay.checkFinished() && this.selectionCooldown.checkFinished()) {
-			if (inputManager.isKeyDown(KeyEvent.VK_UP)){
+			if (inputManager.isKeyDown(KeyEvent.VK_UP)) {
 				this.selectedRow = (this.selectedRow - 1 + TOTAL_ROWS) % TOTAL_ROWS;
 				this.selectionCooldown.reset();
 				soundManager.playSound(Sound.MENU_MOVE);
@@ -120,7 +124,7 @@ public class GameSettingScreen extends Screen {
 					}
 				}
 				handleNameInput(inputManager);
-			} else if (this.selectedRow == 1) {
+			} else if (this.selectedRow == 1) { // Difficulty level selection
 				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)) {
 					if (this.difficultyLevel != 0) {
 						this.difficultyLevel--;
@@ -134,7 +138,17 @@ public class GameSettingScreen extends Screen {
 						soundManager.playSound(Sound.MENU_MOVE);
 					}
 				}
-			} else if (this.selectedRow == 2) {
+			} else if (this.selectedRow == 2) { // Ship selection
+				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)) {
+					this.selectedShipIndex = (this.selectedShipIndex - 1 + TOTAL_SHIPS) % TOTAL_SHIPS;
+					this.selectionCooldown.reset();
+					soundManager.playSound(Sound.MENU_MOVE);
+				} else if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
+					this.selectedShipIndex = (this.selectedShipIndex + 1) % TOTAL_SHIPS;
+					this.selectionCooldown.reset();
+					soundManager.playSound(Sound.MENU_MOVE);
+				}
+			} else if (this.selectedRow == 3) { // Start the game
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 					this.returnCode = 2;
 					this.isRunning = false;
@@ -148,14 +162,13 @@ public class GameSettingScreen extends Screen {
 				soundManager.playSound(Sound.MENU_BACK);
 			}
 		}
-
 	}
 
 	/**
 	 * Handles the input for player name.
 	 *
 	 * @param inputManager
-	 *            Input manager.
+	 *                     Input manager.
 	 */
 	private void handleNameInput(InputManager inputManager) {
 		for (int keyCode = KeyEvent.VK_A; keyCode <= KeyEvent.VK_Z; keyCode++) {
@@ -166,7 +179,7 @@ public class GameSettingScreen extends Screen {
 						this.selectionCooldown.reset();
 						soundManager.playSound(Sound.MENU_TYPING);
 					}
-				} else{
+				} else {
 					if (this.name1.length() < NAME_LIMIT) {
 						this.name1 += (char) keyCode;
 						this.selectionCooldown.reset();
@@ -187,7 +200,8 @@ public class GameSettingScreen extends Screen {
 
 		drawManager.drawGameSettingRow(this, this.selectedRow);
 
-		drawManager.drawGameSettingElements(this, this.selectedRow, this.isMultiplayer, this.name1, this.name2,this.difficultyLevel);
+		drawManager.drawGameSettingElements(this, this.selectedRow, this.isMultiplayer, this.name1, this.name2,
+				this.difficultyLevel, this.selectedShipIndex);
 
 		drawManager.completeDrawing(this);
 	}
