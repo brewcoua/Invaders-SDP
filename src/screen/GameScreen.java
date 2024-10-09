@@ -198,6 +198,8 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 
+		this.enemyShipFormation.updateSmooth();
+
 		manageCollisions();
 		cleanBullets();
 		draw();
@@ -270,8 +272,18 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Manages collisions between bullets and ships.
+	 * Also manages collisions between diver enemies and ships.
 	 */
 	private void manageCollisions() {
+		for (EnemyShip diver : this.enemyShipFormation.getDivingShips()) {
+			if(checkCollision(diver, this.ship) && !this.levelFinished && !this.ship.isDestroyed()) {
+				this.ship.destroy();
+				this.lives--;
+				this.logger.info("Hit on player ship, " + this.lives
+						+ " lives remaining.");
+			}
+		}
+
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
