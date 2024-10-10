@@ -9,12 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import engine.*;
 import screen.Screen;
-import engine.Cooldown;
-import engine.Core;
-import engine.DrawManager;
 import engine.DrawManager.SpriteType;
-import engine.GameSettings;
 
 /**
  * Groups enemy ships into a formation that moves together.
@@ -30,10 +27,14 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int INIT_POS_Y = 140;
 	/** Distance between ships. */
 	private static final int SEPARATION_DISTANCE = 40;
+	/** Proportion of E-type ships. */
+	private static final double PROPORTION_E = 0.1;
+	/** Proportion of D-type ships. */
+	private static final double PROPORTION_D = 0.1;
 	/** Proportion of C-type ships. */
-	private static final double PROPORTION_C = 0.2;
+	private static final double PROPORTION_C = 0.1;
 	/** Proportion of B-type ships. */
-	private static final double PROPORTION_B = 0.4;
+	private static final double PROPORTION_B = 0.2;
 	/** Lateral speed of the formation. */
 	private static final int X_SPEED = 8;
 	/** Downwards speed of the formation. */
@@ -57,6 +58,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private Logger logger;
 	/** Screen to draw ships on. */
 	private Screen screen;
+	/** Singleton instance of SoundManager */
+	private final SoundManager soundManager = SoundManager.getInstance();
 
 	/** List of enemy ships in the grid formation. */
 	private List<List<EnemyShip>> enemyShipsGrid;
@@ -146,10 +149,13 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShipsGrid) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (i / (float) this.nShipsHigh < PROPORTION_C)
+				if (i / (float) this.nShipsHigh < PROPORTION_E)
+					spriteType = SpriteType.EnemyShipE1;
+				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D)
+					spriteType = SpriteType.EnemyShipD1;
+				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_B
-						+ PROPORTION_C)
+				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C + PROPORTION_B)
 					spriteType = SpriteType.EnemyShipB1;
 				else
 					spriteType = SpriteType.EnemyShipA1;
@@ -481,6 +487,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(shooter.getPositionX()
 					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
+			soundManager.playSound(Sound.ALIEN_LASER);
 		}
 	}
 
