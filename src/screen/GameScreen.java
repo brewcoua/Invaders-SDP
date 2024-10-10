@@ -179,8 +179,10 @@ public class GameScreen extends Screen {
 			}
 
 			if (this.enemyShipSpecial != null) {
-				if (!this.enemyShipSpecial.isDestroyed())
+				if (!this.enemyShipSpecial.isDestroyed()) {
 					this.enemyShipSpecial.move(2, 0);
+					enemyShipSpecial.updateEnemyShipSpecial();
+				}
 				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
 					this.enemyShipSpecial = null;
 
