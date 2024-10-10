@@ -271,6 +271,7 @@ public class GameScreen extends Screen {
 		}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+		BulletPool.recycleRedBullets(recyclable);
 	}
 
 	/**
@@ -310,6 +311,7 @@ public class GameScreen extends Screen {
 			}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+		BulletPool.recycleRedBullets(recyclable);
 	}
 
 	/**
