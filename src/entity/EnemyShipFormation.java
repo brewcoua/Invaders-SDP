@@ -340,13 +340,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(shooter.getPositionX()
 					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
-
+			
 			// enemyShipSpecial can also shoot
 			if (enemyShipSpecial != null && !enemyShipSpecial.isDestroyed()) {
 				bullets.add(BulletPool.getBullet(enemyShipSpecial.getPositionX()
 						+ enemyShipSpecial.width / 2, enemyShipSpecial.getPositionY(), BULLET_SPEED));
 			}
-			
 			soundManager.playSound(Sound.ALIEN_LASER);
 		}
 	}
