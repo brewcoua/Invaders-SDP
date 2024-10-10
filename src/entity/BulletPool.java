@@ -32,10 +32,12 @@ public final class BulletPool {
 	 * @param speed
 	 *            Requested speed of the bullet, positive or negative depending
 	 *            on direction - positive is down.
+	 * @param isenemyShipSpecial
+	 *            Check if it is an enemyshipspecial.
 	 * @return Requested bullet.
 	 */
 	public static Bullet getBullet(final int positionX,
-			final int positionY, final int speed) {
+			final int positionY, final int speed, final boolean isenemyShipSpecial) {
 		Bullet bullet;
 		if (!pool.isEmpty()) {
 			bullet = pool.iterator().next();

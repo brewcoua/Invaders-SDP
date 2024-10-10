@@ -105,7 +105,7 @@ public abstract class Ship extends Entity {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY,  this.getBulletSpeed()));
+					positionY,  this.getBulletSpeed(), false));
 			soundManager.playSound(Sound.PLAYER_LASER);
 			return true;
 		}
