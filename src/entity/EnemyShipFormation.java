@@ -1,5 +1,7 @@
 package entity;
 
+import java.awt.*;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,13 +24,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Initial position in the x-axis. */
 	private static final int INIT_POS_X = 20;
 	/** Initial position in the y-axis. */
-	private static final int INIT_POS_Y = 100;
+	private static final int INIT_POS_Y = 140;
 	/** Distance between ships. */
 	private static final int SEPARATION_DISTANCE = 40;
-	/** Proportion of E-type ships. */
-	private static final double PROPORTION_E = 0.1;
 	/** Proportion of D-type ships. */
-	private static final double PROPORTION_D = 0.1;
+	private static final double PROPORTION_D = 0.2;
 	/** Proportion of C-type ships. */
 	private static final double PROPORTION_C = 0.1;
 	/** Proportion of B-type ships. */
@@ -59,10 +59,15 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
 
-	/** List of enemy ships forming the formation. */
-	private List<List<EnemyShip>> enemyShips;
+	/** List of enemy ships in the grid formation. */
+	private List<List<EnemyShip>> enemyShipsGrid;
+
+	/** List of enemy diver ships */
+	private List<EnemyShipDiver> enemyShipsDivers;
+
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
+
 	/** Number of ships in the formation - horizontally. */
 	private int nShipsWide;
 	/** Number of ships in the formation - vertically. */
@@ -77,7 +82,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private int movementSpeed;
 	/** Current direction the formation is moving on. */
 	private Direction currentDirection;
-	/** Direction the formation was moving previously. */
+	/** Direction the grid formation was moving previously. */
 	private Direction previousDirection;
 	/** Interval between movements, in frames. */
 	private int movementInterval;
@@ -117,7 +122,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public EnemyShipFormation(final GameSettings gameSettings) {
 		this.drawManager = Core.getDrawManager();
 		this.logger = Core.getLogger();
-		this.enemyShips = new ArrayList<List<EnemyShip>>();
+		this.enemyShipsGrid = new ArrayList<List<EnemyShip>>();
+		this.enemyShipsDivers = new ArrayList<EnemyShipDiver>();
 		this.currentDirection = Direction.RIGHT;
 		this.movementInterval = 0;
 		this.nShipsWide = gameSettings.getFormationWidth();
@@ -137,39 +143,47 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		// Each sub-list is a column on the formation.
 		for (int i = 0; i < this.nShipsWide; i++)
-			this.enemyShips.add(new ArrayList<EnemyShip>());
+			this.enemyShipsGrid.add(new ArrayList<EnemyShip>());
 
-		for (List<EnemyShip> column : this.enemyShips) {
+		for (List<EnemyShip> column : this.enemyShipsGrid) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (i / (float) this.nShipsHigh < PROPORTION_E)
-					spriteType = SpriteType.EnemyShipE1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D)
+				if (i / (float) this.nShipsHigh <  PROPORTION_D)
 					spriteType = SpriteType.EnemyShipD1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C)
+				else if (i / (float) this.nShipsHigh <  PROPORTION_D + PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C + PROPORTION_B)
+				else if (i / (float) this.nShipsHigh <  PROPORTION_D + PROPORTION_C + PROPORTION_B)
 					spriteType = SpriteType.EnemyShipB1;
 				else
 					spriteType = SpriteType.EnemyShipA1;
 
 				column.add(new EnemyShip((SEPARATION_DISTANCE 
-						* this.enemyShips.indexOf(column))
+						* this.enemyShipsGrid.indexOf(column))
 								+ positionX, (SEPARATION_DISTANCE * i)
 								+ positionY, spriteType));
 				this.shipCount++;
 			}
 		}
 
-		this.shipWidth = this.enemyShips.get(0).get(0).getWidth();
-		this.shipHeight = this.enemyShips.get(0).get(0).getHeight();
+		this.shipWidth = this.enemyShipsGrid.get(0).get(0).getWidth();
+		this.shipHeight = this.enemyShipsGrid.get(0).get(0).getHeight();
 
 		this.width = (this.nShipsWide - 1) * SEPARATION_DISTANCE
 				+ this.shipWidth;
 		this.height = (this.nShipsHigh - 1) * SEPARATION_DISTANCE
 				+ this.shipHeight;
 
-		for (List<EnemyShip> column : this.enemyShips)
+		for (List<EnemyShip> column : this.enemyShipsGrid)
 			this.shooters.add(column.get(column.size() - 1));
+
+		// TODO: change count based on level
+		this.logger.info("Initializing Divers");
+		for(int i = 1; i <= 3; i++) {
+			// cannot use screen.getWidth() because screen has not been attached yet
+			this.enemyShipsDivers.add(new EnemyShipDiver(650 / 4 * i,
+					INIT_POS_Y - SEPARATION_DISTANCE));
+			this.shipCount++;
+		}
+
 	}
 
 	/**
@@ -186,10 +200,15 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * Draws every individual component of the formation.
 	 */
 	public final void draw() {
-		for (List<EnemyShip> column : this.enemyShips)
+		for (List<EnemyShip> column : this.enemyShipsGrid)
 			for (EnemyShip enemyShip : column)
 				drawManager.drawEntity(enemyShip, enemyShip.getPositionX(),
 						enemyShip.getPositionY());
+
+		for(EnemyShip enemyShip : this.enemyShipsDivers) {
+			drawManager.drawEntity(enemyShip, enemyShip.getPositionX(),
+					enemyShip.getPositionY());
+		}
 	}
 
 	/**
@@ -265,27 +284,146 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			positionY += movementY;
 
 			// Cleans explosions.
-			List<EnemyShip> destroyed;
-			for (List<EnemyShip> column : this.enemyShips) {
-				destroyed = new ArrayList<EnemyShip>();
+			List<EnemyShip> destroyed = new ArrayList<EnemyShip>();
+			for (List<EnemyShip> column : this.enemyShipsGrid) {
 				for (EnemyShip ship : column) {
 					if (ship != null && ship.isDestroyed()) {
 						destroyed.add(ship);
 						this.logger.info("Removed enemy "
 								+ column.indexOf(ship) + " from column "
-								+ this.enemyShips.indexOf(column));
+								+ this.enemyShipsGrid.indexOf(column));
 					}
 				}
 				column.removeAll(destroyed);
+				destroyed = new ArrayList<EnemyShip>();
 			}
 
-			for (List<EnemyShip> column : this.enemyShips)
+			for (EnemyShip ship : this.enemyShipsDivers) {
+				if (ship != null && ship.isDestroyed()) {
+					destroyed.add(ship);
+					this.logger.info("Removed enemy diver "
+							+ this.enemyShipsDivers.indexOf(ship));
+				}
+			}
+			this.enemyShipsDivers.removeAll(destroyed);
+
+			for (List<EnemyShip> column : this.enemyShipsGrid)
 				for (EnemyShip enemyShip : column) {
 					enemyShip.move(movementX, movementY);
 					enemyShip.update();
 				}
+
+			for(int i = 0; i < this.enemyShipsDivers.size(); i++) {
+				EnemyShipDiver enemyShip = this.enemyShipsDivers.get(i);
+				int state = enemyShip.getState();
+				boolean attacking = Math.random() < 0.1;
+
+				// Check if diver is ready to attack and not already attacking
+				if(enemyShip.getDiveCooldown().checkFinished() && state < 2) {
+					this.logger.info("Enemy diver "
+							+ i + " is preparing its attack. ");
+					enemyShip.setState(4);
+				}
+
+				// Move non-attacking diver ships
+				if(state == 0) { // Moving left
+					enemyShip.move(-EnemyShipDiver.SPEED_X, 0);
+					enemyShip.update();
+
+					// Turn around if at edge of screen
+					if(enemyShip.getPositionX() <= SIDE_MARGIN) {
+						this.logger.info("Enemy diver "
+								+ i + " is turning right (hit left edge of screen). ");
+						enemyShip.setState(1);
+					}
+				} else if(state == 1) { // Moving right
+					enemyShip.move(EnemyShipDiver.SPEED_X, 0);
+					enemyShip.update();
+
+					// Turn around if at edge of screen
+					if(enemyShip.getPositionX() + enemyShip.getWidth() >= screen.getWidth() - SIDE_MARGIN) {
+						enemyShip.setState(0);
+						this.logger.info("Enemy diver "
+								+ i + " is turning left (hit right edge of screen)");
+					}
+				} else { // Other states will be handled by updateSmooth() method
+					continue;
+				}
+
+				// If a diver collides with another, turn around
+				for(int j = 0; j < enemyShipsDivers.size(); j++) {
+					// Ignore self & diving ships
+					if(i == j || enemyShipsDivers.get(j).getState() >= 2) {
+						continue;
+					}
+					EnemyShipDiver o = enemyShipsDivers.get(j);
+					// Check if enemyShip bumps into a ship on its left
+					if(enemyShip.getPositionX() <= o.getPositionX() + o.getWidth()
+							&& enemyShip.getPositionX() >= o.getPositionX()) {
+						this.logger.info("Enemy diver " + i + " bumped into diver " + j + " on the left." +
+								"Divers will move away from each other.");
+						enemyShip.setState(1);
+						o.setState(0);
+						enemyShip.setPositionX(o.getPositionX() + o.getWidth());
+					}
+					// Check if enemyShip bumps into a ship on its right
+					else if(enemyShip.getPositionX() + enemyShip.getWidth() >= o.getPositionX()
+							&& enemyShip.getPositionX() + enemyShip.getWidth() <= o.getPositionX() + o.getWidth()) {
+						this.logger.info("Enemy diver " + i + " bumped into diver " + j + " on the right." +
+								"Divers will move away from each other.");
+						enemyShip.setState(0);
+						o.setState(1);
+						enemyShip.setPositionX(o.getPositionX() - enemyShip.getWidth());
+					}
+				}
+			}
 		}
 	}
+
+	/**
+	 * Updates diving ships for smooth animations
+	 */
+	public final void updateSmooth() {
+		// TODO: Change speed based on difficulty
+		for(int i = 0; i < this.enemyShipsDivers.size(); i++) {
+			EnemyShipDiver enemyShip = this.enemyShipsDivers.get(i);
+			int state = enemyShip.getState();
+
+			// Does not update destroyed ships
+			if(enemyShip.isDestroyed()) {
+				continue;
+			}
+
+			if(state == 2) { // Diving
+				if(enemyShip.getPositionY() > screen.getHeight()) {
+					enemyShip.setPositionY(0);
+					enemyShip.setState(3);
+					this.logger.info("Enemy diver "
+							+ i + " is returning back to its position");
+				}
+				enemyShip.move(0, EnemyShipDiver.SPEED_DIVE);
+			} else if(state == 3) { // Returning
+				enemyShip.move(0, 2);
+
+				if(enemyShip.getPositionY() > 100) {
+					enemyShip.setPositionY(100);
+					enemyShip.setState((int) Math.round(Math.random()));
+					enemyShip.getDiveCooldown().reset();
+					this.logger.info("Enemy diver "
+							+ i + " has returned");
+				}
+			} else if(state == 69) {
+				enemyShip.setState(2);
+				this.logger.info("Enemy diver "
+						+ i + " is now diving");
+			}
+			else if(state > 3) { // Starting attack
+				enemyShip.setState(state + 1);
+			}
+			enemyShip.update();
+		}
+	}
+
 
 	/**
 	 * Cleans empty columns, adjusts the width and height of the formation.
@@ -294,7 +432,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		Set<Integer> emptyColumns = new HashSet<Integer>();
 		int maxColumn = 0;
 		int minPositionY = Integer.MAX_VALUE;
-		for (List<EnemyShip> column : this.enemyShips) {
+		for (List<EnemyShip> column : this.enemyShipsGrid) {
 			if (!column.isEmpty()) {
 				// Height of this column
 				int columnSize = column.get(column.size() - 1).positionY
@@ -304,18 +442,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						.getPositionY());
 			} else {
 				// Empty column, we remove it.
-				emptyColumns.add(this.enemyShips.indexOf(column));
+				emptyColumns.add(this.enemyShipsGrid.indexOf(column));
 			}
 		}
 		for (int index : emptyColumns) {
-			this.enemyShips.remove(index);
+			this.enemyShipsGrid.remove(index);
 			logger.info("Removed column " + index);
 		}
 
 		int leftMostPoint = 0;
 		int rightMostPoint = 0;
 		
-		for (List<EnemyShip> column : this.enemyShips) {
+		for (List<EnemyShip> column : this.enemyShipsGrid) {
 			if (!column.isEmpty()) {
 				if (leftMostPoint == 0)
 					leftMostPoint = column.get(0).getPositionX();
@@ -337,6 +475,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Bullets set to add the bullet being shot.
 	 */
 	public final void shoot(final Set<Bullet> bullets) {
+		// Does nothing if no shooters are available.
+		if(this.shooters.isEmpty()) {
+			return;
+		}
+		
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
@@ -356,26 +499,32 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Ship to be destroyed.
 	 */
 	public final void destroy(final EnemyShip destroyedShip) {
-		for (List<EnemyShip> column : this.enemyShips)
+		for (List<EnemyShip> column : this.enemyShipsGrid)
 			for (int i = 0; i < column.size(); i++)
 				if (column.get(i).equals(destroyedShip)) {
 					column.get(i).destroy();
 					this.logger.info("Destroyed ship in ("
-							+ this.enemyShips.indexOf(column) + "," + i + ")");
+							+ this.enemyShipsGrid.indexOf(column) + "," + i + ")");
 				}
+
+		for (int i = 0; i < this.enemyShipsDivers.size(); i++)
+			if (this.enemyShipsDivers.get(i).equals(destroyedShip)) {
+				this.enemyShipsDivers.get(i).destroy();
+				this.logger.info("Destroyed diver ship " + i);
+			}
 
 		// Updates the list of ships that can shoot the player.
 		if (this.shooters.contains(destroyedShip)) {
 			int destroyedShipIndex = this.shooters.indexOf(destroyedShip);
 			int destroyedShipColumnIndex = -1;
 
-			for (List<EnemyShip> column : this.enemyShips)
+			for (List<EnemyShip> column : this.enemyShipsGrid)
 				if (column.contains(destroyedShip)) {
-					destroyedShipColumnIndex = this.enemyShips.indexOf(column);
+					destroyedShipColumnIndex = this.enemyShipsGrid.indexOf(column);
 					break;
 				}
 
-			EnemyShip nextShooter = getNextShooter(this.enemyShips
+			EnemyShip nextShooter = getNextShooter(this.enemyShipsGrid
 					.get(destroyedShipColumnIndex));
 
 			if (nextShooter != null)
@@ -418,9 +567,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public final Iterator<EnemyShip> iterator() {
 		Set<EnemyShip> enemyShipsList = new HashSet<EnemyShip>();
 
-		for (List<EnemyShip> column : this.enemyShips)
+		for (List<EnemyShip> column : this.enemyShipsGrid)
 			for (EnemyShip enemyShip : column)
 				enemyShipsList.add(enemyShip);
+
+		for (EnemyShip enemyShip : this.enemyShipsDivers)
+			enemyShipsList.add(enemyShip);
 
 		return enemyShipsList.iterator();
 	}
@@ -432,5 +584,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	public final boolean isEmpty() {
 		return this.shipCount <= 0;
+	}
+
+	/**
+	 * @return List of diving ships
+	 */
+	public final List<EnemyShipDiver> getDivingShips() {
+		List<EnemyShipDiver> out = new ArrayList<EnemyShipDiver>();
+		for(EnemyShipDiver ship : enemyShipsDivers) {
+			if(ship.getState() == 2) {
+				out.add(ship);
+			}
+		}
+		return out;
 	}
 }
