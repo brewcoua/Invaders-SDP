@@ -475,6 +475,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Bullets set to add the bullet being shot.
 	 */
 	public final void shoot(final Set<Bullet> bullets) {
+		// Does nothing if no shooters are available.
+		if(this.shooters.isEmpty()) {
+			return;
+		}
+		
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
