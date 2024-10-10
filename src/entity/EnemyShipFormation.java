@@ -329,8 +329,10 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * 
 	 * @param bullets
 	 *            Bullets set to add the bullet being shot.
+	 * @param enemyShipSpecial
+	 *            Special enemy ship that can shoot in special conditions.
 	 */
-	public final void shoot(final Set<Bullet> bullets) {
+	public final void shoot(final Set<Bullet> bullets, final EnemyShip enemyShipSpecial) {
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
@@ -339,6 +341,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(shooter.getPositionX()
 					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
+
+			// enemyShipSpecial can also shoot
+			if (enemyShipSpecial != null && !enemyShipSpecial.isDestroyed()) {
+				bullets.add(BulletPool.getBullet(enemyShipSpecial.getPositionX()
+						+ enemyShipSpecial.width / 2, enemyShipSpecial.getPositionY(), BULLET_SPEED));
+			}
 		}
 	}
 
