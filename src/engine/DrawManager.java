@@ -72,6 +72,7 @@ public final class DrawManager {
 	public static enum SpriteType {
 		/** Player ship. */
 		Ship,
+
 		/** Destroyed player ship. */
 		ShipDestroyed,
 		/** Player bullet. */
@@ -94,13 +95,22 @@ public final class DrawManager {
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
 		Explosion,
-
-		/** 2nd player ship. */
-		Ship2,
-		/** 3rd player ship. */
-		Ship3,
-		/** 4th player ship. */
-		Ship4,
+        /** 2nd player ship. */
+        Ship2,
+        /** 3rd player ship. */
+        Ship3,
+        /** 4th player ship. */
+        Ship4,
+		/** Fourth enemy ship - first form. */
+		EnemyShipD1,
+		/** Fourth enemy ship - second form. */
+		EnemyShipD2,
+		/** Fifth enemy ship - first form. */
+		EnemyShipE1,
+		/** Fifth enemy ship - second form. */
+		EnemyShipE2,
+		/** Elite enemy ship - first form. */
+		EnemyShipF1
 	};
 
 	/**
@@ -129,6 +139,11 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.Ship2, new boolean[13][8]);
 			spriteMap.put(SpriteType.Ship3, new boolean[13][8]);
 			spriteMap.put(SpriteType.Ship4, new boolean[13][8]);
+			spriteMap.put(SpriteType.EnemyShipD1, new boolean[12][8]);
+			spriteMap.put(SpriteType.EnemyShipD2, new boolean[12][8]);
+			spriteMap.put(SpriteType.EnemyShipE1, new boolean[12][8]);
+			spriteMap.put(SpriteType.EnemyShipE2, new boolean[12][8]);
+			spriteMap.put(SpriteType.EnemyShipF1, new boolean[12][8]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
