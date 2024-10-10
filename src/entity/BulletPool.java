@@ -2,6 +2,7 @@ package entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.awt.Color;
 
 /**
  * Implements a pool of recyclable bullets.
@@ -50,6 +51,9 @@ public final class BulletPool {
 			bullet = new Bullet(positionX, positionY, speed);
 			bullet.setPositionX(positionX - bullet.getWidth() / 2);
 		}
+		// Set color to red if it's an enemyShipSpecial bullet
+		if (isenemyShipSpecial)
+			bullet.setColorToRed();
 		return bullet;
 	}
 
@@ -59,7 +63,12 @@ public final class BulletPool {
 	 * @param bullet
 	 *            Bullets to recycle.
 	 */
-	public static void recycle(final Set<Bullet> bullet) {
-		pool.addAll(bullet);
+	public static void recycle(final Set<Bullet> bullets) {
+		for (Bullet bullet : bullets) {
+			// Only recycle if the bullet is not red
+			if (!bullet.getColor().equals(Color.RED)) {
+				pool.add(bullet);
+			}
+		}
 	}
 }

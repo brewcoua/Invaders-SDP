@@ -121,4 +121,11 @@ public class Entity {
 	public final int getHeight() {
 		return this.height;
 	}
+
+	/**
+	 * Setter for the color of the entity to red.
+	 */
+	public void setColorToRed() {
+		this.color = Color.RED;
+	}
 }
