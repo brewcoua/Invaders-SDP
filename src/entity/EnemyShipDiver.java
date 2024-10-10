@@ -23,7 +23,7 @@ public class EnemyShipDiver extends EnemyShip {
      * @param positionY
      */
     public EnemyShipDiver(final int positionX, final int positionY) {
-        super(positionX, positionY, DrawManager.SpriteType.EnemyShipC1); // TODO: Modify sprite
+        super(positionX, positionY, DrawManager.SpriteType.EnemyShipE1);
         this.diveCooldown = Core.getVariableCooldown(DIVE_INTERVAL, DIVE_VARIANCE);
         this.diveCooldown.reset();
         this.pointValue = POINTS;
@@ -35,7 +35,7 @@ public class EnemyShipDiver extends EnemyShip {
      */
     public final void update() {
         if((this.state / 10) % 2 == 0 && this.state != 2) {
-            this.color = Color.WHITE;
+            this.color = Color.YELLOW;
         } else {
             this.color = Color.RED;
         }
@@ -44,11 +44,11 @@ public class EnemyShipDiver extends EnemyShip {
             this.animationCooldown.reset();
 
             switch (this.spriteType) {
-                case EnemyShipC1:
-                    this.spriteType = DrawManager.SpriteType.EnemyShipC2;
+                case EnemyShipE1:
+                    this.spriteType = DrawManager.SpriteType.EnemyShipE2;
                     break;
-                case EnemyShipC2:
-                    this.spriteType = DrawManager.SpriteType.EnemyShipC1;
+                case EnemyShipE2:
+                    this.spriteType = DrawManager.SpriteType.EnemyShipE1;
                     break;
                 default:
                     break;

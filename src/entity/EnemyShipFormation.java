@@ -27,10 +27,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int INIT_POS_Y = 140;
 	/** Distance between ships. */
 	private static final int SEPARATION_DISTANCE = 40;
-	/** Proportion of E-type ships. */
-	private static final double PROPORTION_E = 0.1;
 	/** Proportion of D-type ships. */
-	private static final double PROPORTION_D = 0.1;
+	private static final double PROPORTION_D = 0.2;
 	/** Proportion of C-type ships. */
 	private static final double PROPORTION_C = 0.1;
 	/** Proportion of B-type ships. */
@@ -149,13 +147,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShipsGrid) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (i / (float) this.nShipsHigh < PROPORTION_E)
-					spriteType = SpriteType.EnemyShipE1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D)
+				if (i / (float) this.nShipsHigh <  PROPORTION_D)
 					spriteType = SpriteType.EnemyShipD1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C)
+				else if (i / (float) this.nShipsHigh <  PROPORTION_D + PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh <  PROPORTION_E + PROPORTION_D + PROPORTION_C + PROPORTION_B)
+				else if (i / (float) this.nShipsHigh <  PROPORTION_D + PROPORTION_C + PROPORTION_B)
 					spriteType = SpriteType.EnemyShipB1;
 				else
 					spriteType = SpriteType.EnemyShipA1;
@@ -179,7 +175,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		for (List<EnemyShip> column : this.enemyShipsGrid)
 			this.shooters.add(column.get(column.size() - 1));
 
-		// TODO: change count based on level and assign unique ship sprite
+		// TODO: change count based on level
 		this.logger.info("Initializing Divers");
 		for(int i = 1; i <= 3; i++) {
 			// cannot use screen.getWidth() because screen has not been attached yet
