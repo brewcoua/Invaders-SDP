@@ -61,15 +61,16 @@ public final class FileManager {
 	 * Loads sprites from disk.
 	 * 
 	 * @param spriteMap
-	 *            Mapping of sprite type and empty boolean matrix that will
-	 *            contain the image.
+	 *                  Mapping of sprite type and empty boolean matrix that will
+	 *                  contain the image.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 *                     In case of loading problems.
 	 */
 	public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
 			throws IOException {
 		InputStream inputStream = null;
-		/**--1-- 첫번째 변경점
+		/**
+		 * --1-- 첫번째 변경점
 		 * res파일을 못찾는 것 같아서 res파일을 리소스파일로 만들어줌
 		 */
 		try {
@@ -105,12 +106,12 @@ public final class FileManager {
 	 * Loads a font of a given size.
 	 * 
 	 * @param size
-	 *            Point size of the font.
+	 *             Point size of the font.
 	 * @return New font.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 *                             In case of loading problems.
 	 * @throws FontFormatException
-	 *             In case of incorrect font format.
+	 *                             In case of incorrect font format.
 	 */
 	public Font loadFont(final float size) throws IOException,
 			FontFormatException {
@@ -119,7 +120,8 @@ public final class FileManager {
 
 		try {
 			// Font loading.
-			/**--2-- 두번째 변경점
+			/**
+			 * --2-- 두번째 변경점
 			 * 1. res파일을 못찾는 것 같아서 res파일을 리소스파일로 만들어줌
 			 * 2. font파일이 없어서 github에 있는 폰트 다운 및 res파일에 넣고 경로 설정 해줌
 			 */
@@ -141,7 +143,7 @@ public final class FileManager {
 	 * 
 	 * @return Default high scores.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 *                     In case of loading problems.
 	 */
 	private List<Score> loadDefaultHighScores() throws IOException {
 		List<Score> highScores = new ArrayList<Score>();
@@ -177,7 +179,7 @@ public final class FileManager {
 	 * 
 	 * @return Sorted list of scores - players.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 *                     In case of loading problems.
 	 */
 	public List<Score> loadHighScores() throws IOException {
 
@@ -225,7 +227,7 @@ public final class FileManager {
 		return highScores;
 	}
 
-	public List<String> loadCreditList() throws IOException {  // 사용자의 크레딧 파일을 로드
+	public List<String> loadCreditList() throws IOException { // 사용자의 크레딧 파일을 로드
 
 		List<String> creditname = new ArrayList<String>();
 		InputStream inputStream = null;
@@ -245,7 +247,7 @@ public final class FileManager {
 				name = bufferedReader.readLine();
 			}
 
-		}finally {
+		} finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
 		}
@@ -253,16 +255,15 @@ public final class FileManager {
 		return creditname;
 	}
 
-
 	/**
 	 * Saves user high scores to disk.
 	 * 
 	 * @param highScores
-	 *            High scores to save.
+	 *                   High scores to save.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 *                     In case of loading problems.
 	 */
-	public void saveHighScores(final List<Score> highScores) 
+	public void saveHighScores(final List<Score> highScores)
 			throws IOException {
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
@@ -316,15 +317,16 @@ public final class FileManager {
 			jarPath = URLDecoder.decode(jarPath, "UTF-8"); // 현재 파일 실행 경로. Current file execution path
 
 			String walletPath = new File(jarPath).getParent(); // 상위 파일 경로. Parent file path
-			walletPath += File.separator; // 파일 경로에 '/' 또는 '\' 추가(환경마다 다름). Add '/' or '\' to the file path (depends on the environment)
+			walletPath += File.separator; // 파일 경로에 '/' 또는 '\' 추가(환경마다 다름). Add '/' or '\' to the file path (depends on
+											// the environment)
 			walletPath += "wallet";
 
 			File walletFile = new File(walletPath);
 
 			if (!walletFile.exists())
-				walletFile.createNewFile(); //파일이 없으면 새로 만듦. If the file does not exist, create a new one.
+				walletFile.createNewFile(); // 파일이 없으면 새로 만듦. If the file does not exist, create a new one.
 
-			outputStream = new FileOutputStream(walletFile); //덮어쓰기. Overwrite
+			outputStream = new FileOutputStream(walletFile); // 덮어쓰기. Overwrite
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
 					outputStream, Charset.forName("UTF-8")));
 
