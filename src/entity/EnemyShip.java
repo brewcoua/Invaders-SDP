@@ -149,4 +149,9 @@ public class EnemyShip extends Entity {
 	public final boolean isDestroyed() {
 		return this.isDestroyed;
 	}
+
+    public boolean isEnemy() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isEnemy'");
+    }
 }

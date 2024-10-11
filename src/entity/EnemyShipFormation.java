@@ -334,13 +334,20 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
-
+	
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			bullets.add(BulletPool.getBullet(shooter.getPositionX()
-					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
+			
+			bullets.add(BulletPool.getBullet(
+				shooter.getPositionX() + shooter.width / 2,
+				shooter.getPositionY(),
+				shooter.isEnemy(), // 使用 shooter 的 isEnemy 方法
+				BULLET_SPEED, // 子弹速度
+				Bullet.ShapeType.RECTANGLE // 或者其他形状类型
+			));
 		}
 	}
+	
 
 	/**
 	 * Destroys a ship.

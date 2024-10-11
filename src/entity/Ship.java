@@ -26,6 +26,7 @@ public class Ship extends Entity {
 	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
 	private Cooldown destructionCooldown;
+	private boolean isEnemy;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -69,8 +70,13 @@ public class Ship extends Entity {
 	public final boolean shoot(final Set<Bullet> bullets) {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY, BULLET_SPEED));
+			bullets.add(BulletPool.getBullet(
+				positionX + this.width / 2,
+				positionY,
+				this.isEnemy, // 如果是敌人，则传递 true
+				BULLET_SPEED,
+				Bullet.ShapeType.RECTANGLE // 或者根据需要选择形状
+			));
 			return true;
 		}
 		return false;
