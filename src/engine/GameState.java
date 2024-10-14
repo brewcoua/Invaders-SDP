@@ -28,6 +28,8 @@ public class GameState {
 	private String alertMessage;
     /** Ships destroyed consecutive. */
 	private int combo;
+	/** Game Difficulty */
+	private int difficulty;
 
 	/**
 	 * Constructor.
@@ -54,7 +56,7 @@ public class GameState {
 	public GameState(final int level, final int score,
 			final Ship.ShipType shipType,
 			final int livesRemaining, final int bulletsShot,
-			final int shipsDestroyed, final int elapsedTime, final String alertMessage, final int combo) {
+			final int shipsDestroyed, final int elapsedTime, final String alertMessage, final int combo, int difficulty) {
 				
 		this.level = level;
 		this.score = score;
@@ -65,6 +67,7 @@ public class GameState {
 		this.elapsedTime = elapsedTime;
 		this.alertMessage = alertMessage;
 		this.combo = combo;
+		this.difficulty = difficulty;
 	}
 
 	/**
@@ -120,6 +123,12 @@ public class GameState {
 	 */
 	public final String getAlertMessage() { return alertMessage; }
 
+	/**
+	 * @return the difficulty
+	 */
+	public final int getDifficulty() {
+		return difficulty;
+	}
 	public double getAccuracy() {
 		if (bulletsShot == 0){
 			return 0;

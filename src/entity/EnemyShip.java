@@ -89,17 +89,6 @@ public class EnemyShip extends Entity {
 		case EnemyShipF1:
 			this.pointValue = F_TYPE_POINTS;
 			break;
-		case EnemyShipD1:
-		case EnemyShipD2:
-			this.pointValue = D_TYPE_POINTS;
-			break;
-		case EnemyShipE1:
-		case EnemyShipE2:
-			this.pointValue = E_TYPE_POINTS;
-			break;
-		case EnemyShipF1:
-			this.pointValue = F_TYPE_POINTS;
-			break;
 		default:
 			this.pointValue = 0;
 			break;

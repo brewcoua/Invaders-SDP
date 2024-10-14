@@ -618,7 +618,8 @@ public class GameScreen extends Screen {
 						isExecuted = false;
 						recyclable.add(bullet);
 
-						if (itemManager.dropItem()) {
+						if (!this.enemyShipFormation.getEnemyDivers().contains(enemyShip) &&
+								itemManager.dropItem()) {
 							this.itemBoxes.add(new ItemBox(enemyShip.getPositionX() + 6, enemyShip.getPositionY() + 1));
 							logger.info("Item box dropped");
 						}
@@ -717,7 +718,7 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.shipType, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.elapsedTime, this.alertMessage, 0);
+				this.bulletsShot, this.shipsDestroyed, this.elapsedTime, this.alertMessage, 0, 0);
 	}
 
 	//Enemy bullet damage increases depending on stage level

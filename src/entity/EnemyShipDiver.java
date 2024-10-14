@@ -3,6 +3,7 @@ package entity;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
+import engine.GameState;
 
 import java.awt.*;
 
@@ -22,8 +23,8 @@ public class EnemyShipDiver extends EnemyShip {
      * @param positionX
      * @param positionY
      */
-    public EnemyShipDiver(final int positionX, final int positionY) {
-        super(positionX, positionY, DrawManager.SpriteType.EnemyShipE1);
+    public EnemyShipDiver(final int positionX, final int positionY, final GameState gameState) {
+        super(positionX, positionY, DrawManager.SpriteType.EnemyShipE1, gameState);
         this.diveCooldown = Core.getVariableCooldown(DIVE_INTERVAL, DIVE_VARIANCE);
         this.diveCooldown.reset();
         this.pointValue = POINTS;
