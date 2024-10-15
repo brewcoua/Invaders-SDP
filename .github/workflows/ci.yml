@@ -11,7 +11,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'openjdk'
+          distribution: 'corretto'
           java-version: '22'
       - name: Build all files
         run: javac -d out src/**/*.java
