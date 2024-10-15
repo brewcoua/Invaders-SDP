@@ -115,6 +115,10 @@ public class EnemyShip extends Entity {
 				case EnemyShipE1:
 				case EnemyShipE2:
 					return Color.ORANGE; // Цвет для типа E
+				case EnemyShipF1:
+					return Color.YELLOW;
+				case EnemyShipF2:
+					return Color.RED;
 				default:
 					return Color.WHITE; // Цвет по умолчанию
 			}

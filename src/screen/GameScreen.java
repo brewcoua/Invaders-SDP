@@ -383,7 +383,9 @@ public class GameScreen extends Screen {
 			}
 		}
 
-		this.enemyShipFormation.updateSmooth();
+		if(this.inputDelay.checkFinished() && !itemManager.isTimeStopActive()) {
+			this.enemyShipFormation.updateSmooth();
+		}
 
 		manageCollisions();
 		cleanBullets();

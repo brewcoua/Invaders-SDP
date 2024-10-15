@@ -12,7 +12,7 @@ public class EnemyShipDiver extends EnemyShip {
     private static final int POINTS = 50;
     private final int DIVE_INTERVAL = 4000;
     private final int DIVE_VARIANCE = -1000;
-    public static final int SPEED_X = 10;
+    public static final int SPEED_X = 7;
     public static final int SPEED_DIVE = 3;
     private Cooldown diveCooldown;
     private int state;

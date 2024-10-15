@@ -186,7 +186,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.logger.info("Initializing Divers");
 		for(int i = 1; i <= Math.min(gameState.getLevel(), 8); i++) {
 			// cannot use screen.getWidth() because screen has not been attached yet
-			this.enemyShipsDivers.add(new EnemyShipDiver(650 / (1 + Math.min(gameState.getLevel(), 8)) * i,
+			this.enemyShipsDivers.add(new EnemyShipDiver(600 / (1 + Math.min(gameState.getLevel(), 8)) * i,
 					INIT_POS_Y - SEPARATION_DISTANCE, gameState));
 			this.shipCount++;
 		}
@@ -329,12 +329,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				int state = enemyShip.getState();
 				boolean attacking = Math.random() < 0.1;
 
-				// Check if diver is ready to attack and not already attacking
-				if(enemyShip.getDiveCooldown().checkFinished() && state < 2) {
-					this.logger.info("Enemy diver "
-							+ i + " is preparing its attack. ");
-					enemyShip.setState(4);
-				}
 
 				// Move non-attacking diver ships
 				if(state == 0) { // Moving left
@@ -395,13 +389,21 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * Updates diving ships for smooth animations
 	 */
 	public final void updateSmooth() {
+
 		for(int i = 0; i < this.enemyShipsDivers.size(); i++) {
 			EnemyShipDiver enemyShip = this.enemyShipsDivers.get(i);
 			int state = enemyShip.getState();
 
-			// Does not update destroyed ships
+			// Does not update destroyed ships and null ships
 			if(enemyShip.isDestroyed()) {
 				continue;
+			}
+
+			// Check if diver is ready to attack and not already attacking
+			if(enemyShip.getDiveCooldown().checkFinished() && state < 2) {
+				this.logger.info("Enemy diver "
+						+ i + " is preparing its attack. ");
+				enemyShip.setState(4);
 			}
 
 			if(state == 2) { // Diving
@@ -411,7 +413,10 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 					this.logger.info("Enemy diver "
 							+ i + " is returning back to its position");
 				}
-				enemyShip.move(0, EnemyShipDiver.SPEED_DIVE * (1 + gameState.getDifficulty()/2));
+				enemyShip.move(0, EnemyShipDiver.SPEED_DIVE + gameState.getDifficulty());
+				if(gameState.getDifficulty() == 2) {
+					enemyShip.move(0, 1);
+				}
 			} else if(state == 3) { // Returning
 				enemyShip.move(0, 2);
 
