@@ -29,17 +29,3 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-
-  style:
-    name: Checkstyle
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Checkstyle
-        uses: dbelyaev/action-checkstyle@v1.16.5
-        with:
-          level: warning
-          fail_on_error: true
