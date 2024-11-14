@@ -1,11 +1,10 @@
 package screen;
 
-import java.awt.event.KeyEvent;
 import engine.Cooldown;
 import engine.Core;
 import engine.Sound;
 import engine.SoundManager;
-import entity.Ship;
+import java.awt.event.KeyEvent;
 
 public class SettingScreen extends Screen {
 
@@ -23,13 +22,13 @@ public class SettingScreen extends Screen {
     private static final int COOLDOWN_TIME = 200;
 
     /** Menu item list */
-    private String[] menuItems = {"Sound", "Ending Credit"};
+    private final String[] menuItems = {"Sound", "Ending Credit"};
     /** Default selected menu item */
     private int selectedItem = 0;
     /** Default volume value */
     private int volumeLevel;
     /** Time between changes in user selection. */
-    private Cooldown selectionCooldown;
+    private final Cooldown selectionCooldown;
     /** Singleton instance of SoundManager */
     private final SoundManager soundManager = SoundManager.getInstance();
 

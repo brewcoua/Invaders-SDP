@@ -1,13 +1,14 @@
 package engine;
 
+import entity.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
-import entity.*;
-import screen.GameSettingScreen;
 import screen.Screen;
 
 /**
@@ -73,7 +71,7 @@ public final class DrawManager {
 
 
 	/** Sprite types. */
-	public static enum SpriteType {
+	public enum SpriteType {
 		/** Player ship. */
 		Ship,
 		/** Destroyed player ship. */
@@ -134,9 +132,9 @@ public final class DrawManager {
 		EnemyShipF1,
 		/** Diver enemy ship - first form. */
 		EnemyShipF2
-	};
+	}
 
-	/**
+    /**
 	 * Private constructor.
 	 */
 	private DrawManager() {
@@ -211,7 +209,7 @@ public final class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	protected static DrawManager getInstance() {
+	static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;

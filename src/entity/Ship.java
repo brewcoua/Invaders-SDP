@@ -1,13 +1,12 @@
 package entity;
 
-import java.awt.Color;
-import java.util.Set;
-
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
 import engine.Sound;
 import engine.SoundManager;
+import java.awt.Color;
+import java.util.Set;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -27,7 +26,7 @@ public abstract class Ship extends Entity {
     /** Play the sound every 0.5 second */
 	private static final int SOUND_COOLDOWN_INTERVAL = 500;
     /** Cooldown for playing sound */
-	private Cooldown soundCooldown;
+	private final Cooldown soundCooldown;
 
 	/** Multipliers for the ship's properties. */
 	protected final ShipMultipliers multipliers;
@@ -39,7 +38,7 @@ public abstract class Ship extends Entity {
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
-	private Cooldown destructionCooldown;
+	private final Cooldown destructionCooldown;
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
 

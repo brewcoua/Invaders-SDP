@@ -4,7 +4,6 @@ import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
 import engine.GameState;
-
 import java.awt.*;
 
 public class EnemyShipDiver extends EnemyShip {
@@ -14,7 +13,7 @@ public class EnemyShipDiver extends EnemyShip {
     private final int DIVE_VARIANCE = -1000;
     public static final int SPEED_X = 7;
     public static final int SPEED_DIVE = 3;
-    private Cooldown diveCooldown;
+    private final Cooldown diveCooldown;
     private int state;
 
 

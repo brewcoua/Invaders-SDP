@@ -1,9 +1,9 @@
 package engine;
 
-import javax.sound.sampled.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
+import javax.sound.sampled.*;
 
 /**
  * Manages sound effects and BGM.

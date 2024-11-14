@@ -1,12 +1,10 @@
 package screen;
 
+import engine.*;
 import engine.Cooldown;
 import engine.Core;
-import engine.GameSettings;
 import engine.InputManager;
-import engine.*;
 import entity.Ship;
-
 import java.awt.event.KeyEvent;
 
 /**
@@ -60,9 +58,9 @@ public class GameSettingScreen extends Screen {
 		super(width, height, fps);
 
 		// row 0: multiplayer
-		this.name1 = "P1";
-		this.name2 = "P2";
-		this.isMultiplayer = false;
+		name1 = "P1";
+		name2 = "P2";
+		isMultiplayer = false;
 
 		// row 1: difficulty level
 		this.difficultyLevel = 1; 	// 0: easy, 1: normal, 2: hard
@@ -109,23 +107,23 @@ public class GameSettingScreen extends Screen {
 
 			if (this.selectedRow == 0) {
 				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)) {
-					this.isMultiplayer = false;
+					isMultiplayer = false;
 					this.selectionCooldown.reset();
 					soundManager.playSound(Sound.MENU_MOVE);
 				} else if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
-					this.isMultiplayer = true;
+					isMultiplayer = true;
 					this.selectionCooldown.reset();
 					soundManager.playSound(Sound.MENU_MOVE);
 				} else if (inputManager.isKeyDown(KeyEvent.VK_BACK_SPACE)) {
 					if (isMultiplayer) {
-						if (!this.name2.isEmpty()) {
-							this.name2 = this.name2.substring(0, this.name2.length() - 1);
+						if (!name2.isEmpty()) {
+							name2 = name2.substring(0, name2.length() - 1);
 							this.selectionCooldown.reset();
 							soundManager.playSound(Sound.MENU_TYPING);
 						}
 					} else {
-						if (!this.name1.isEmpty()) {
-							this.name1 = this.name1.substring(0, this.name1.length() - 1);
+						if (!name1.isEmpty()) {
+							name1 = name1.substring(0, name1.length() - 1);
 							this.selectionCooldown.reset();
 							soundManager.playSound(Sound.MENU_TYPING);
 						}
@@ -195,14 +193,14 @@ public class GameSettingScreen extends Screen {
 		for (int keyCode = KeyEvent.VK_A; keyCode <= KeyEvent.VK_Z; keyCode++) {
 			if (inputManager.isKeyDown(keyCode)) {
 				if (isMultiplayer) {
-					if (this.name2.length() < NAME_LIMIT) {
-						this.name2 += (char) keyCode;
+					if (name2.length() < NAME_LIMIT) {
+						name2 += (char) keyCode;
 						this.selectionCooldown.reset();
 						soundManager.playSound(Sound.MENU_TYPING);
 					}
 				} else{
-					if (this.name1.length() < NAME_LIMIT) {
-						this.name1 += (char) keyCode;
+					if (name1.length() < NAME_LIMIT) {
+						name1 += (char) keyCode;
 						this.selectionCooldown.reset();
 						soundManager.playSound(Sound.MENU_TYPING);
 					}

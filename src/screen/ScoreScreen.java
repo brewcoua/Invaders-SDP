@@ -1,12 +1,11 @@
 package screen;
 
+import engine.*;
+import entity.Wallet;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
-import engine.*;
-import entity.Wallet;
 
 /**
  * Implements the score screen.
@@ -23,24 +22,25 @@ public class ScoreScreen extends Screen {
 
 
 	/** Current score. */
-	private int score;
+	private final int score;
 	/** Player lives left. */
-	private int livesRemaining;
+	private final int livesRemaining;
 	/** Total bullets shot by the player. */
-	private int bulletsShot;
+	private final int bulletsShot;
 	/** Total ships destroyed by the player. */
-	private int shipsDestroyed;
+	private final int shipsDestroyed;
 	/** List of past high scores. */
 	private List<Score> highScores;
 	/** Checks if current score is a new high score. */
-	private double accuracy;
+	private final double accuracy;
 	private boolean isNewRecord;
 	/** Number of coins earned in the game */
 	private int coinsEarned;
 	/** Player's name */
-	private String name1, name2;
+	private final String name1;
+    private String name2;
 	/** Two player mode flags*/
-	private boolean isMultiplay;
+	private final boolean isMultiplay;
 
 	// Set ratios for each coin_lv - placed in an array in the order of lv1, lv2, lv3, lv4, and will be used accordingly,
 	// e.g., lv1; score 100 * 0.1

@@ -1,12 +1,11 @@
 package screen;
 
-import java.awt.event.KeyEvent;
-
 import engine.Cooldown;
 import engine.Core;
 import engine.Sound;
 import engine.SoundManager;
 import entity.Wallet;
+import java.awt.event.KeyEvent;
 
 public class ShopScreen extends Screen {
 
@@ -18,24 +17,24 @@ public class ShopScreen extends Screen {
     private final SoundManager soundManager = SoundManager.getInstance();
 
     /** Time between changes in user selection. */
-    private Cooldown selectionCooldown;
+    private final Cooldown selectionCooldown;
 
     /** Time until not enough coin alert disappear */
-    private Cooldown money_alertCooldown;
+    private final Cooldown money_alertCooldown;
 
     /** Time until max_lv alert disappear */
-    private Cooldown max_alertCooldown;
+    private final Cooldown max_alertCooldown;
 
     /** Player's wallet */
-    private Wallet wallet;
+    private final Wallet wallet;
 
     /** 1-bullet speed 2-shot frequency 3-additional lives 4-gain coin upgrade */
     private int selected_item;
 
     /** price per upgrade level */
-    private int lv1cost = 2000;
-    private int lv2cost = 4000;
-    private int lv3cost = 8000;
+    private final int lv1cost = 2000;
+    private final int lv2cost = 4000;
+    private final int lv3cost = 8000;
 
     /**
      * Constructor, establishes the properties of the screen.
