@@ -3,7 +3,6 @@ package entity;
 import engine.DrawManager.SpriteType;
 import engine.Sound;
 import engine.SoundManager;
-
 import java.awt.*;
 
 /**

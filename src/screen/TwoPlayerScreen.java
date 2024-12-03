@@ -4,10 +4,10 @@ import engine.Core;
 import engine.GameSettings;
 import engine.GameState;
 import entity.Wallet;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 /**
  * Implements the Two player mode screen, where the action happens.
  */

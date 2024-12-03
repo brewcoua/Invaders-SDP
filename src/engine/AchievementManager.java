@@ -1,7 +1,6 @@
 package engine;
 
 import entity.Achievement;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -12,7 +11,7 @@ public class AchievementManager {
     private static final Logger logger = Logger.getLogger(AchievementManager.class.getName());
 
 
-    private Achievement achievement;
+    private final Achievement achievement;
 
     // Variables related to Perfect Achievement
     private static int currentPerfectLevel;
@@ -38,7 +37,7 @@ public class AchievementManager {
     // Variables needed for each achievement are loaded through a file.
     public AchievementManager() throws IOException {
         achievement = FileManager.getInstance().loadAchievement();
-        this.currentPerfectLevel = achievement.getPerfectStage();
+        currentPerfectLevel = achievement.getPerfectStage();
         this.highMaxCombo = achievement.getHighmaxCombo();
         this.checkFlawlessFailure = achievement.getFlawlessFailure();
     }

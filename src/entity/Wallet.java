@@ -1,13 +1,12 @@
 package entity;
 
 import engine.Core;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Wallet {
-    private static Logger logger = Core.getLogger();
+    private static final Logger logger = Core.getLogger();
     private int coin;
 
     //bullet speed level
@@ -153,7 +152,7 @@ public class Wallet {
             //파일에서 각 줄을 읽어와서 값 설정
             //Read each line from the file and set the values
             int coin = Integer.parseInt(bufferedReader.readLine());
-            int levelSeq [] = new int[4]; //bullet_lv, shot_lv, lives_lv, coin_lv
+            int[] levelSeq = new int[4]; //bullet_lv, shot_lv, lives_lv, coin_lv
             for (int i = 0; i < 4; i++) {
                 int level = Integer.parseInt(bufferedReader.readLine());
                 if(level > 4 || level <= 0){

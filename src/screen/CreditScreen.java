@@ -1,12 +1,11 @@
 package screen;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.List;
-
 import engine.Core;
 import engine.Sound;
 import engine.SoundManager;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.List;
 
 public class CreditScreen extends Screen{
 

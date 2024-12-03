@@ -1,16 +1,16 @@
 package entity;
 
 import engine.DrawManager.SpriteType;
-import java.util.Random;
 import java.awt.*;
+import java.util.Random;
 
 public class Blocker extends Entity {
 
-    private Random random;
+    private final Random random;
     /* angle */
     private double angle;
     /* Move left? */
-    private boolean moveLeft;
+    private final boolean moveLeft;
 
     public Blocker(int positionX, int positionY, final SpriteType spriteType, boolean moveLeft) {
         //super(positionX, positionY, 182 * 2, 93 * 2, Color.GREEN);

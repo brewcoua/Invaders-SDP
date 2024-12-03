@@ -1,7 +1,6 @@
 package entity;
 
 import engine.DrawManager.SpriteType;
-
 import java.awt.*;
 
 public class Block extends Entity {

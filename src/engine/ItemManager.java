@@ -1,15 +1,14 @@
 package engine;
 
+import entity.Barrier;
 import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Ship;
-import entity.Barrier;
-
 import java.awt.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -27,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class ItemManager {
     /** Width of game screen. */
-    private int WIDTH;
+    private final int WIDTH;
     /** Height of game screen. */
-    private int HEIGHT;
+    private final int HEIGHT;
     /** Item drop probability, (1 ~ 100). */
     private static final int ITEM_DROP_PROBABILITY = 30;
     /** Cooldown of Ghost */
@@ -59,7 +58,7 @@ public class ItemManager {
     /** Number of bullets that player's ship shoot. */
     private int shotNum;
     /** Sound balance for each player*/
-    private float balance;
+    private final float balance;
 
     /** Types of item */
     public enum ItemType {

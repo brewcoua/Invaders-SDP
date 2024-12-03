@@ -1,13 +1,11 @@
 package screen;
 
-import java.awt.event.KeyEvent;
-
 import engine.Cooldown;
 import engine.Core;
 import engine.Sound;
 import engine.SoundManager;
 import entity.Wallet;
-
+import java.awt.event.KeyEvent;
 
 /**
  * Implements the title screen.
@@ -21,12 +19,12 @@ public class TitleScreen extends Screen {
 	private static final int SELECTION_TIME = 200;
 
 	/** Time between changes in user selection. */
-	private Cooldown selectionCooldown;
+	private final Cooldown selectionCooldown;
 
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
 
-	private Wallet wallet;
+	private final Wallet wallet;
 
 	/**
 	 * Constructor, establishes the properties of the screen.

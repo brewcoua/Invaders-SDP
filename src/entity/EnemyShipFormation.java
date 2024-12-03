@@ -1,13 +1,11 @@
 package entity;
 
-import java.awt.*;
-import java.sql.Array;
+import engine.*;
+import engine.DrawManager.SpriteType;
+
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
-
-import engine.*;
-import engine.DrawManager.SpriteType;
 import screen.Screen;
 
 /**
@@ -50,32 +48,32 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int MINIMUM_SPEED = 10;
 
 	/** DrawManager instance. */
-	private DrawManager drawManager;
+	private final DrawManager drawManager;
 	/** Application logger. */
-	private Logger logger;
+	private final Logger logger;
 	/** Screen to draw ships on. */
 	private Screen screen;
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
 
 	/** List of enemy ships in the grid formation. */
-	private List<List<EnemyShip>> enemyShipsGrid;
+	private final List<List<EnemyShip>> enemyShipsGrid;
 	/** List of enemy diver ships */
-	private List<EnemyShipDiver> enemyShipsDivers;
+	private final List<EnemyShipDiver> enemyShipsDivers;
 
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
 
 	/** Number of ships in the formation - horizontally. */
-	private int nShipsWide;
+	private final int nShipsWide;
 	/** Number of ships in the formation - vertically. */
-	private int nShipsHigh;
+	private final int nShipsHigh;
 	/** Time between shots. */
-	private int shootingInterval;
+	private final int shootingInterval;
 	/** Variance in the time between shots. */
-	private int shootingVariance;
+	private final int shootingVariance;
 	/** Initial ship speed. */
-	private int baseSpeed;
+	private final int baseSpeed;
 	/** Speed of the ships. */
 	private int movementSpeed;
 	/** Current direction the formation is moving on. */
@@ -85,19 +83,19 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Interval between movements, in frames. */
 	private int movementInterval;
 	/** Total width of the formation. */
-	private int width;
+	private final int width;
 	/** Total height of the formation. */
-	private int height;
+	private final int height;
 	/** Position in the x-axis of the upper left corner of the formation. */
 	private int positionX;
 	/** Position in the y-axis of the upper left corner of the formation. */
 	private int positionY;
 	/** Width of one ship. */
-	private int shipWidth;
+	private final int shipWidth;
 	/** Height of one ship. */
-	private int shipHeight;
+	private final int shipHeight;
 	/** List of ships that are able to shoot. */
-	private List<EnemyShip> shooters;
+	private final List<EnemyShip> shooters;
 	/** Number of not destroyed ships. */
 	private int shipCount;
 
@@ -105,7 +103,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 	private int distroyedship = 0;
 
-	private GameState gameState;
+	private final GameState gameState;
 
 	/** Directions the formation can move. */
 	private enum Direction {
@@ -115,9 +113,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		LEFT,
 		/** Movement to the bottom of the screen. */
 		DOWN
-	};
+	}
 
-	/**
+    /**
 	 * Constructor, sets the initial conditions.
 	 * 
 	 * @param gameSettings
