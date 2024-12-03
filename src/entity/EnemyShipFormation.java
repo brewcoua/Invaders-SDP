@@ -2,7 +2,7 @@ package entity;
 
 import engine.*;
 import engine.DrawManager.SpriteType;
-import java.awt.*;
+
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
