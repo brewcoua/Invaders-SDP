@@ -33,13 +33,15 @@ public class GameSettingScreen extends Screen {
 	private int difficultyLevel;
 	/** Selected row. */
 	private int selectedRow;
-	/** Ship type. */
-	private Ship.ShipType shipType;
+	/** Player 1 Ship type. */
+	private Ship.ShipType shipTypeP1;
+	/** Player 2 Ship type. */
+	private Ship.ShipType shipTypeP2;
 	/** Time between changes in user selection. */
 	private final Cooldown selectionCooldown;
 
 	/** Total number of rows for selection. */
-	private static final int TOTAL_ROWS = 4; // Multiplayer, Difficulty, Ship Type, Start
+	private static final int TOTAL_ROWS = 5; // Multiplayer, Difficulty, P1 Ship Type, P2 Ship Type Start
 
 	/** Singleton instance of SoundManager */
 	private final SoundManager soundManager = SoundManager.getInstance();
@@ -66,9 +68,12 @@ public class GameSettingScreen extends Screen {
 		this.difficultyLevel = 1; 	// 0: easy, 1: normal, 2: hard
 
 		// row 2: ship type
-		this.shipType = shipType;
+		this.shipTypeP1 = shipType;
 
-		// row 3: start
+		// row 3 (if multiplayer): ship type
+		this.shipTypeP2 = shipType;
+
+		// row 3 (4 if multiplayer): start
 
 		this.selectedRow = 0;
 
@@ -96,11 +101,11 @@ public class GameSettingScreen extends Screen {
 		draw();
 		if (this.inputDelay.checkFinished() && this.selectionCooldown.checkFinished()) {
 			if (inputManager.isKeyDown(KeyEvent.VK_UP)){
-				this.selectedRow = (this.selectedRow - 1 + TOTAL_ROWS) % TOTAL_ROWS;
+				this.selectedRow = (this.selectedRow - 1 + getTotalRows()) % getTotalRows();
 				this.selectionCooldown.reset();
 				soundManager.playSound(Sound.MENU_MOVE);
 			} else if (inputManager.isKeyDown(KeyEvent.VK_DOWN)) {
-				this.selectedRow = (this.selectedRow + 1) % TOTAL_ROWS;
+				this.selectedRow = (this.selectedRow + 1) % getTotalRows();
 				this.selectionCooldown.reset();
 				soundManager.playSound(Sound.MENU_MOVE);
 			}
@@ -149,7 +154,7 @@ public class GameSettingScreen extends Screen {
 					Ship.ShipType[] shipTypes = Ship.ShipType.values();
 					int index = 0;
 					for (int i = 0; i < shipTypes.length; i++) {
-						if (shipTypes[i] == this.shipType) {
+						if (shipTypes[i] == this.shipTypeP1) {
 							index = i;
 							break;
 						}
@@ -157,18 +162,40 @@ public class GameSettingScreen extends Screen {
 
 					if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
 						if (index < shipTypes.length - 1) {
-							this.shipType = shipTypes[index + 1];
+							this.shipTypeP1 = shipTypes[index + 1];
 						}
 					} else {
 						if (index > 0) {
-							this.shipType = shipTypes[index - 1];
+							this.shipTypeP1 = shipTypes[index - 1];
 						}
 					}
 					this.selectionCooldown.reset();
 				}
-			} else if (this.selectedRow == 3) {
+			} else if (this.selectedRow == 3 && isMultiplayer) { // Select P2 Ship
+				if (inputManager.isKeyDown(KeyEvent.VK_LEFT) || inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
+					Ship.ShipType[] shipTypes = Ship.ShipType.values();
+					int index = 0;
+					for (int i = 0; i < shipTypes.length; i++) {
+						if (shipTypes[i] == this.shipTypeP2) {
+							index = i;
+							break;
+						}
+					}
+
+					if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
+						if (index < shipTypes.length - 1) {
+							this.shipTypeP2 = shipTypes[index + 1];
+						}
+					} else {
+						if (index > 0) {
+							this.shipTypeP2 = shipTypes[index - 1];
+						}
+					}
+					this.selectionCooldown.reset();
+				}
+			} else {
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
-					this.returnCode = isMultiplayer ? 8: 2;
+					this.returnCode = isMultiplayer ? 8 : 2;
 					this.isRunning = false;
 					soundManager.playSound(Sound.MENU_CLICK);
 				}
@@ -225,6 +252,10 @@ public class GameSettingScreen extends Screen {
 	 */
 	public static String getName(int playerNumber) { return playerNumber == 0 ? name1 : name2; }
 
+	private int getTotalRows() {
+		return isMultiplayer ? TOTAL_ROWS : TOTAL_ROWS - 1;
+	}
+
 	/**
 	 * Draws the elements associated with the screen.
 	 */
@@ -233,13 +264,14 @@ public class GameSettingScreen extends Screen {
 
 		drawManager.drawGameSetting(this);
 
-		drawManager.drawGameSettingRow(this, this.selectedRow);
+		drawManager.drawGameSettingRow(this, this.selectedRow, isMultiplayer);
 
-		drawManager.drawGameSettingElements(this, this.selectedRow, isMultiplayer, name1, name2,this.difficultyLevel, this.shipType);
+		drawManager.drawGameSettingElements(this, this.selectedRow, isMultiplayer, name1, name2,this.difficultyLevel, this.shipTypeP1, this.shipTypeP2);
 
 		drawManager.completeDrawing(this);
 
 		Core.setLevelSetting(this.difficultyLevel);
-		Core.BASE_SHIP = this.shipType;
+		Core.BASE_SHIP_P1 = this.shipTypeP1;
+		Core.BASE_SHIP_P2 = this.shipTypeP2;
 	}
 }

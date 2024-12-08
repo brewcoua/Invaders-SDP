@@ -1480,7 +1480,7 @@ public final class DrawManager {
 			int circleSize = 16;
 			int startAngle = 90;
 			int endAngle = 0;
-			switch(Core.BASE_SHIP){
+			switch(Core.BASE_SHIP_P1){
 				case VoidReaper:
 					endAngle = 360 * (int)remainingTime / (int)(750 * 0.4);
 				    break;
@@ -1522,18 +1522,18 @@ public final class DrawManager {
 			int circleSize = 16;
 			int startAngle = 90;
 			int endAngle = 0;
-			switch(Core.BASE_SHIP){
-				case Ship.ShipType.VoidReaper:
-					endAngle = 360 * (int)remainingTime / (int)(750 * 0.4);
-					break;
-				case Ship.ShipType.CosmicCruiser:
-					endAngle = 360 * (int)remainingTime / (int)(750 * 1.6);
-					break;
-				case Ship.ShipType.StarDefender:
+			switch (ship.getSpriteType()) {
+				case DrawManager.SpriteType.Ship: // Star Defender
 					endAngle = 360 * (int)remainingTime / (int)(750 * 1.0);
 					break;
-				case Ship.ShipType.GalacticGuardian:
+				case DrawManager.SpriteType.Ship2: // Void Reaper
+					endAngle = 360 * (int)remainingTime / (int)(750 * 0.4);
+					break;
+				case DrawManager.SpriteType.Ship3: // Galactic Guardian
 					endAngle = 360 * (int)remainingTime / (int)(750 * 1.2);
+					break;
+				case DrawManager.SpriteType.Ship4: // Cosmic Cruiser
+					endAngle = 360 * (int)remainingTime / (int)(750 * 1.6);
 					break;
 			}
 			threadBufferGraphics[threadNumber].fillArc(shipX + shipWidth/2 - circleSize/2, shipY - 3*circleSize/2,
@@ -1787,26 +1787,31 @@ public final class DrawManager {
 	 *            Screen to draw on.
 	 * @param selectedRow
 	 *            Selected row.
+	 * @param isMultiplayer
+	 *            2 player-mode selection.
 	 *
 	 * @author <a href="mailto:dayeon.dev@gmail.com">Dayeon Oh</a>
 	 *
 	 */
-	public void drawGameSettingRow(final Screen screen, final int selectedRow) {
+	public void drawGameSettingRow(final Screen screen, final int selectedRow, final boolean isMultiplayer) {
 		int y = 0;
 		int height = 0;
 		int screenHeight = screen.getHeight();
 
 		if (selectedRow == 0) {
-			y = screenHeight / 100 * 30;
-			height = screen.getHeight() / 100 * 22;
+			y = screenHeight / 100 * 28;
+			height = screen.getHeight() / 100 * 16;
 		} else if (selectedRow == 1) {
-			y = screenHeight / 100 * 52;
-			height = screen.getHeight() / 100 * 18;
+			y = screenHeight / 100 * 44;
+			height = screen.getHeight() / 100 * 9;
 		} else if (selectedRow == 2) {
-			y = screenHeight / 100 * 70;
-			height = screen.getHeight() / 100 * 22;
-		} else if (selectedRow == 3) {
-			y = screenHeight / 100 * 92;
+			y = screenHeight / 100 * 53;
+			height = screen.getHeight() / 100 * 20;
+		} else if (selectedRow == 3 && isMultiplayer) {
+			y = screenHeight / 100 * 73;
+			height = screen.getHeight() / 100 * 20;
+		} else {
+			y = screenHeight / 100 * 93;
 			height = screen.getHeight() / 100 * 10;
 		}
 
@@ -1835,7 +1840,7 @@ public final class DrawManager {
 	 */
 	public void drawGameSettingElements(final Screen screen, final int selectedRow,
 										final boolean isMultiPlayer, final String name1, final String name2, final int difficultyLevel,
-										final Ship.ShipType shipType) {
+										final Ship.ShipType shipTypeP1, final Ship.ShipType shipTypeP2) {
 		String spaceString = " ";
 		String player1String = "1 Player";
 		String player2String = "2 Player";
@@ -1847,27 +1852,60 @@ public final class DrawManager {
 		if (!isMultiPlayer) backBufferGraphics.setColor(Color.GREEN);
 		else backBufferGraphics.setColor(Color.WHITE);
 
-		drawCenteredRegularString(screen, player1String + spaceString.repeat(40), screen.getHeight() / 100 * 38);
-		drawCenteredRegularString(screen, name1 + spaceString.repeat(40), screen.getHeight() / 100 * 46);
+		drawCenteredRegularString(screen, player1String + spaceString.repeat(40), screen.getHeight() / 100 * 32);
+		drawCenteredRegularString(screen, name1 + spaceString.repeat(40), screen.getHeight() / 100 * 40);
 
 		if (!isMultiPlayer) backBufferGraphics.setColor(Color.WHITE);
 		else backBufferGraphics.setColor(Color.GREEN);
 
-		drawCenteredRegularString(screen, spaceString.repeat(40) + player2String, screen.getHeight() / 100 * 38);
-		drawCenteredRegularString(screen, spaceString.repeat(40) + name2, screen.getHeight() / 100 * 46);
+		drawCenteredRegularString(screen, spaceString.repeat(40) + player2String, screen.getHeight() / 100 * 32);
+		drawCenteredRegularString(screen, spaceString.repeat(40) + name2, screen.getHeight() / 100 * 40);
 
 		if (difficultyLevel==0) backBufferGraphics.setColor(Color.GREEN);
 		else backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, levelEasyString + spaceString.repeat(60), screen.getHeight() / 100 * 62);
+		drawCenteredRegularString(screen, levelEasyString + spaceString.repeat(60), screen.getHeight() / 100 * 49 + 3);
 
 		if (difficultyLevel==1) backBufferGraphics.setColor(Color.GREEN);
 		else backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, levelNormalString, screen.getHeight() / 100 * 62);
+		drawCenteredRegularString(screen, levelNormalString, screen.getHeight() / 100 * 49 + 3);
 
 		if (difficultyLevel==2) backBufferGraphics.setColor(Color.GREEN);
 		else backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, spaceString.repeat(60) + levelHardString, screen.getHeight() / 100 * 62);
+		drawCenteredRegularString(screen, spaceString.repeat(60) + levelHardString, screen.getHeight() / 100 * 49 + 3);
 
+		drawGameSettingShipSelectionRow(screen, selectedRow, shipTypeP1, 1);
+
+		if(isMultiPlayer) {
+			drawGameSettingShipSelectionRow(screen, selectedRow, shipTypeP2, 2);
+
+			if (selectedRow == 4) backBufferGraphics.setColor(Color.GREEN);
+			else backBufferGraphics.setColor(Color.WHITE);
+			drawCenteredRegularString(screen, startString, screen.getHeight() / 100 * 98 + 3);
+		}
+		else {
+			if (selectedRow == 3) backBufferGraphics.setColor(Color.GREEN);
+			else backBufferGraphics.setColor(Color.WHITE);
+			drawCenteredRegularString(screen, startString, screen.getHeight() / 100 * 98 + 3);
+		}
+	}
+
+	/**
+	 * Draws the game setting elements.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param selectedRow
+	 *            Selected row.
+	 * @param shipType
+	 * 			  Selected ship type.
+	 * @param player
+	 * 			  Player selected.
+	 * @author <a href="mailto:dayeon.dev@gmail.com">Dayeon Oh</a>
+	 *
+	 */
+	private void drawGameSettingShipSelectionRow(final Screen screen, final int selectedRow,
+												 final Ship.ShipType shipType, int player) {
+		final int DRAW_OFFSET = player == 2 ? 20 : 0;
 		Ship.ShipType[] shipTypes = Ship.ShipType.values();
 		int shipIndex = 0;
 		for (int i = 0; i < shipTypes.length; i++) {
@@ -1877,16 +1915,24 @@ public final class DrawManager {
 			}
 		}
 
+		if (selectedRow == 2 && player == 1) backBufferGraphics.setColor(Color.GREEN);
+		else if (selectedRow == 3 && player == 2) backBufferGraphics.setColor(Color.GREEN);
+		else backBufferGraphics.setColor(Color.WHITE);
+
+		String playerShipString = "Player " + player + " Ship";
+
+		drawCenteredRegularString(screen, playerShipString, screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 35);
+
 		// Ship selection
 		final int SHIP_OFFSET = screen.getWidth() / 100 * 30;
 		final int ARROW_OFFSET = 50;
 
 		Ship currentShip = ShipFactory.create(shipType, 0, 0);
 		currentShip.setColor(Color.GREEN);
-		drawEntity(currentShip, screen.getWidth() / 2 - 13, screen.getHeight() / 100 * 80);
-		drawRegularString(screen, shipType.name(),
-				screen.getWidth() / 2 - fontRegularMetrics.stringWidth(shipType.name()) / 2,
-				screen.getHeight() / 100 * 80 - 35
+		drawEntity(currentShip, screen.getWidth() / 2 - 13, screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 20);
+		drawSmallString(screen, shipType.name(),
+				screen.getWidth() / 2 - fontSmallMetrics.stringWidth(shipType.name()) / 2,
+				screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 20
 		);
 
 		/// Draw ship stats
@@ -1897,25 +1943,25 @@ public final class DrawManager {
 				{"SHOT INT", multipliers.shootingInterval()},
 		};
 		List<String> statsStr = new ArrayList<>();
-        for (Object[] stat : stats) {
-            // Format it as percentage (+/-)
-            String mult;
-            if ((float) stat[1] < 1) {
-                mult = "-" + Math.round((1 - (float) stat[1]) * 100) + "%";
-            } else {
-                mult = "+" + Math.round(((float) stat[1] - 1) * 100) + "%";
-            }
-            statsStr.add(mult + " " + stat[0]);
-        }
-		drawCenteredSmallString(screen, String.join(", ", statsStr), screen.getHeight() / 100 * 80 + 38);
+		for (Object[] stat : stats) {
+			// Format it as percentage (+/-)
+			String mult;
+			if ((float) stat[1] < 1) {
+				mult = "-" + Math.round((1 - (float) stat[1]) * 100) + "%";
+			} else {
+				mult = "+" + Math.round(((float) stat[1] - 1) * 100) + "%";
+			}
+			statsStr.add(mult + " " + stat[0]);
+		}
+		drawCenteredSmallString(screen, String.join(", ", statsStr), screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 38);
 
 		if (shipIndex > 0) {
 			Ship previousShip = ShipFactory.create(shipTypes[shipIndex - 1], 0, 0);
 			previousShip.setColor(Color.WHITE);
-			drawEntity(previousShip, screen.getWidth() / 2 - SHIP_OFFSET - 13, screen.getHeight() / 100 * 80);
-			drawRegularString(screen, shipTypes[shipIndex - 1].name(),
-					screen.getWidth() / 2 - SHIP_OFFSET - fontRegularMetrics.stringWidth(shipTypes[shipIndex - 1].name()) / 2,
-					screen.getHeight() / 100 * 80 - 35
+			drawEntity(previousShip, screen.getWidth() / 2 - SHIP_OFFSET - 13, screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 20);
+			drawSmallString(screen, shipTypes[shipIndex - 1].name(),
+					screen.getWidth() / 2 - SHIP_OFFSET - fontSmallMetrics.stringWidth(shipTypes[shipIndex - 1].name()) / 2,
+					screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 20
 			);
 
 			// Draw arrow left
@@ -1925,19 +1971,19 @@ public final class DrawManager {
 							screen.getWidth() / 2 - SHIP_OFFSET - ARROW_OFFSET - 30,
 							screen.getWidth() / 2 - SHIP_OFFSET - ARROW_OFFSET - 15,
 							screen.getWidth() / 2 - SHIP_OFFSET - ARROW_OFFSET - 15},
-					new int[]{screen.getHeight() / 100 * 80,
-							screen.getHeight() / 100 * 80 - 15,
-							screen.getHeight() / 100 * 80 + 15},
+					new int[]{screen.getHeight() / 100 * (64 + DRAW_OFFSET),
+							screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 15,
+							screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 15},
 					3
 			);
 		}
 		if (shipIndex < shipTypes.length - 1) {
 			Ship nextShip = ShipFactory.create(shipTypes[shipIndex + 1], 0, 0);
 			nextShip.setColor(Color.WHITE);
-			drawEntity(nextShip, screen.getWidth() / 2 + SHIP_OFFSET - 13, screen.getHeight() / 100 * 80);
-			drawRegularString(screen, shipTypes[shipIndex + 1].name(),
-					screen.getWidth() / 2 + SHIP_OFFSET - fontRegularMetrics.stringWidth(shipTypes[shipIndex + 1].name()) / 2,
-					screen.getHeight() / 100 * 80 - 35
+			drawEntity(nextShip, screen.getWidth() / 2 + SHIP_OFFSET - 13, screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 20);
+			drawSmallString(screen, shipTypes[shipIndex + 1].name(),
+					screen.getWidth() / 2 + SHIP_OFFSET - fontSmallMetrics.stringWidth(shipTypes[shipIndex + 1].name()) / 2,
+					screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 20
 			);
 
 			// Draw arrow right
@@ -1946,17 +1992,12 @@ public final class DrawManager {
 					new int[]{screen.getWidth() / 2 + SHIP_OFFSET + ARROW_OFFSET + 30,
 							screen.getWidth() / 2 + SHIP_OFFSET + ARROW_OFFSET + 15,
 							screen.getWidth() / 2 + SHIP_OFFSET + ARROW_OFFSET + 15},
-					new int[]{screen.getHeight() / 100 * 80,
-							screen.getHeight() / 100 * 80 - 15,
-							screen.getHeight() / 100 * 80 + 15},
+					new int[]{screen.getHeight() / 100 * (64 + DRAW_OFFSET),
+							screen.getHeight() / 100 * (64 + DRAW_OFFSET) - 15,
+							screen.getHeight() / 100 * (64 + DRAW_OFFSET) + 15},
 					3
 			);
 		}
-
-
-		if (selectedRow == 3) backBufferGraphics.setColor(Color.GREEN);
-		else backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, startString, screen.getHeight() / 100 * 98);
 	}
 
 	/**
