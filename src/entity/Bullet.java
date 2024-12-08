@@ -53,15 +53,15 @@ public class Bullet extends Entity {
 					break;
 				case DrawManager.SpriteType.Ship2: // Void Reaper
 					this.spriteType = SpriteType.BulletType1;
-					this.color = Color.GREEN;
+					this.color = Color.YELLOW;
 					break;
 				case DrawManager.SpriteType.Ship3: // Galactic Guardian
 					this.spriteType = SpriteType.BulletType4;
-					this.color = Color.RED;
+					this.color = Color.MAGENTA;
 					break;
 				case DrawManager.SpriteType.Ship4: // Cosmic Cruiser
 					this.spriteType = SpriteType.BulletType2;
-					this.color = Color.BLUE;
+					this.color = Color.CYAN;
 					break;
 			}
 		} else {
