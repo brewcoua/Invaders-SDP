@@ -1,6 +1,7 @@
 package entity;
 
 import engine.Core;
+import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import java.awt.Color;
 
@@ -19,6 +20,11 @@ public class Bullet extends Entity {
 	private int speed;
 
 	/**
+	 * Pierce of the bullet
+	 */
+
+
+	/**
 	 * Constructor, establishes the bullet's properties.
 	 * 
 	 * @param positionX
@@ -29,47 +35,39 @@ public class Bullet extends Entity {
 	 *            Speed of the bullet, positive or negative depending on
 	 *            direction - positive is down.
 	 */
-	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 3 * 2, 5 * 2, getDefaultColor());
-
+	public Bullet(final int positionX, final int positionY, final int speed, Entity shooter) {
+		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
 		this.speed = speed;
-		setSprite();
-	}
-
-	public static Color getDefaultColor() {
-		switch (Core.BASE_SHIP) {
-			case VoidReaper:
-				return Color.GREEN;
-			case CosmicCruiser:
-				return Color.BLUE;
-			case GalacticGuardian:
-				return Color.RED;
-			default:
-				return Color.WHITE;
-		}
+		setSprite(shooter);
 	}
 
 	/**
-	 * Sets correct sprite for the bullet, based on speed.
+	 * Sets correct sprite and color for the bullet, based on speed.
 	 */
-	public final void setSprite() {
-		if (speed < 0)
-			switch(Core.BASE_SHIP){
-				case VoidReaper:
-					this.spriteType = SpriteType.BulletType1;
-					break;
-				case CosmicCruiser:
-					this.spriteType = SpriteType.BulletType2;
-					break;
-				case StarDefender:
+	public final void setSprite(Entity shooter) {
+		if(shooter instanceof Ship) {
+			switch (shooter.spriteType) {
+				case DrawManager.SpriteType.Ship: // Star Defender
 					this.spriteType = SpriteType.BulletType3;
+					this.color = Color.WHITE;
 					break;
-				case GalacticGuardian:
+				case DrawManager.SpriteType.Ship2: // Void Reaper
+					this.spriteType = SpriteType.BulletType1;
+					this.color = Color.GREEN;
+					break;
+				case DrawManager.SpriteType.Ship3: // Galactic Guardian
 					this.spriteType = SpriteType.BulletType4;
+					this.color = Color.RED;
+					break;
+				case DrawManager.SpriteType.Ship4: // Cosmic Cruiser
+					this.spriteType = SpriteType.BulletType2;
+					this.color = Color.BLUE;
 					break;
 			}
-		else
+		} else {
 			this.spriteType = SpriteType.EnemyBullet;
+			this.color = shooter.getColor();
+		}
 	}
 
 	/**

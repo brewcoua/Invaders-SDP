@@ -161,18 +161,18 @@ public abstract class Ship extends Entity {
 
 			switch (shotNum) {
 				case 1:
-					bullets.add(BulletPool.getBullet(positionX + this.width / 2, positionY, this.getBulletSpeed()));
+					bullets.add(BulletPool.getBullet(positionX + this.width / 2, positionY, this.getBulletSpeed(), this));
 					soundManager.playSound(Sound.PLAYER_LASER, balance);
 					break;
 				case 2:
-					bullets.add(BulletPool.getBullet(positionX + this.width, positionY, this.getBulletSpeed()));
-					bullets.add(BulletPool.getBullet(positionX, positionY, this.getBulletSpeed()));
+					bullets.add(BulletPool.getBullet(positionX + this.width, positionY, this.getBulletSpeed(), this));
+					bullets.add(BulletPool.getBullet(positionX, positionY, this.getBulletSpeed(), this));
 					soundManager.playSound(Sound.ITEM_2SHOT, balance);
 					break;
 				case 3:
-					bullets.add(BulletPool.getBullet(positionX + this.width, positionY, this.getBulletSpeed()));
-					bullets.add(BulletPool.getBullet(positionX, positionY, this.getBulletSpeed()));
-					bullets.add(BulletPool.getBullet(positionX + this.width / 2, positionY, this.getBulletSpeed()));
+					bullets.add(BulletPool.getBullet(positionX + this.width, positionY, this.getBulletSpeed(), this));
+					bullets.add(BulletPool.getBullet(positionX, positionY, this.getBulletSpeed(), this));
+					bullets.add(BulletPool.getBullet(positionX + this.width / 2, positionY, this.getBulletSpeed(), this));
 					soundManager.playSound(Sound.ITEM_3SHOT, balance);
 					break;
 			}
