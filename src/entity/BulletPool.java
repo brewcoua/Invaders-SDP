@@ -25,7 +25,7 @@ public final class BulletPool {
    *     positive is down.
    * @return Requested bullet.
    */
-  public static Bullet getBullet(final int positionX, final int positionY, final int speed) {
+  public static Bullet getBullet(final int positionX, final int positionY, final int speed, Entity shooter) {
     Bullet bullet;
     if (!pool.isEmpty()) {
       bullet = pool.iterator().next();
@@ -33,9 +33,9 @@ public final class BulletPool {
       bullet.setPositionX(positionX - bullet.getWidth() / 2);
       bullet.setPositionY(positionY);
       bullet.setSpeed(speed);
-      bullet.setSprite();
+      bullet.setSprite(shooter);
     } else {
-      bullet = new Bullet(positionX, positionY, speed);
+      bullet = new Bullet(positionX, positionY, speed, shooter);
       bullet.setPositionX(positionX - bullet.getWidth() / 2);
     }
     return bullet;

@@ -903,7 +903,7 @@ public final class DrawManager {
 
 		// draw "perfect clear"
 		if (currentPerfectStage <= 6) {
-			String[] PERFECT_COIN_REWARD = { "200", "400", "800", "2000", "3000", "4000", "5000"}; // 퍼펙트 스테이지 리워드
+			String[] PERFECT_COIN_REWARD = { "200", "400", "800", "2000", "3000", "4000", "5000"}; // Perfect Stage Reward
 			backBufferGraphics.setColor(Color.orange);
 			drawRightSideAchievementCoinBigString(screen, PERFECT_COIN_REWARD[currentPerfectStage],
 					screen.getHeight() /2 + fontRegularMetrics.getHeight()*3+fontBigMetrics.getHeight()*3);
