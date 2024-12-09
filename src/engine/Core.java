@@ -27,7 +27,10 @@ public final class Core {
   private static final int FPS = 60;
 
   /** Base ship type. */
-  public static Ship.ShipType BASE_SHIP = Ship.ShipType.StarDefender;
+  public static Ship.ShipType BASE_SHIP_P1 = Ship.ShipType.StarDefender;
+
+  /** Base ship type. */
+  public static Ship.ShipType BASE_SHIP_P2 = Ship.ShipType.StarDefender;
 
   /** Max lives. */
   public static int MAX_LIVES;
@@ -87,6 +90,7 @@ public final class Core {
     int height = frame.getHeight();
 
     GameState gameState;
+    GameState gameStateP2;
 
     AchievementManager achievementManager;
     Wallet wallet = Wallet.getWallet();
@@ -95,7 +99,9 @@ public final class Core {
     do {
       MAX_LIVES = wallet.getLives_lv() + 2;
       gameState =
-          new GameState(1, 0, BASE_SHIP, MAX_LIVES, 0, 0, 0, "", 0, 0, 0, 0, 0, DifficultySetting);
+              new GameState(1, 0, BASE_SHIP_P1, MAX_LIVES, 0, 0, 0, "", 0, 0, 0, 0, 0, DifficultySetting);
+      gameStateP2 =
+              new GameState(1, 0, BASE_SHIP_P2, MAX_LIVES, 0, 0, 0, "", 0, 0, 0, 0, 0, DifficultySetting);
       achievementManager = new AchievementManager();
 
       GameSettings gameSetting = new GameSettings(4, 4, 60, 2500);
@@ -226,7 +232,7 @@ public final class Core {
           frame.setSize(WIDTH * 2, HEIGHT);
           frame.moveToMiddle();
 
-          currentScreen = new TwoPlayerScreen(gameState, gameSetting, width, height, FPS, wallet);
+          currentScreen = new TwoPlayerScreen(new GameState[]{gameState, gameStateP2}, gameSetting, width, height, FPS, wallet);
           LOGGER.info(
               "Two player starting " + WIDTH + "x" + HEIGHT + " game screen at " + FPS + " fps.");
           frame.setScreen(currentScreen);

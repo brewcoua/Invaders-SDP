@@ -49,3 +49,7 @@ tasks.named<Test>("test") {
         events("passed", "skipped", "failed")
     }
 }
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
