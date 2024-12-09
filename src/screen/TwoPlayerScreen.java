@@ -50,13 +50,13 @@ public class TwoPlayerScreen extends Screen {
      * @param wallet
      *            Wallet for each game.
      */
-    public TwoPlayerScreen(final GameState gameState, final GameSettings gameSettings,
+    public TwoPlayerScreen(final GameState[] gameStates, final GameSettings gameSettings,
                            final int width, final int height, final int fps, Wallet wallet) {
         super(width * 2, height, fps * 2);
 
         for (int playerNumber = 0; playerNumber < 2; playerNumber++) {
             this.gameSettings[playerNumber] = new GameSettings(gameSettings);
-            this.gameStates[playerNumber] = new GameState(gameState);
+            this.gameStates[playerNumber] = new GameState(gameStates[playerNumber]);
             gameFinished[playerNumber] = false;
         }
 
