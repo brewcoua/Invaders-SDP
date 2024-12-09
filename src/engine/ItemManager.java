@@ -135,6 +135,22 @@ public class ItemManager {
     }
 
     /**
+     * Operate the Specified Item (used for JUnit testing purposes)
+     *
+     * @return The score to add and the number of ships destroyed.
+     */
+    public Entry<Integer, Integer> operateItem(ItemType item) {
+        return switch (item) {
+            case Bomb -> operateBomb();
+            case LineBomb -> operateLineBomb();
+            case Barrier -> operateBarrier();
+            case Ghost -> operateGhost();
+            case TimeStop -> operateTimeStop();
+            case MultiShot -> operateMultiShot();
+        };
+    }
+
+    /**
      * Operate Bomb item.
      *
      * @return The score to add and the number of ships destroyed.
