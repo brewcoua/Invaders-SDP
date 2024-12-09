@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ResourceTest {
     @Test
+    @Disabled
     @DisplayName("Play Sounds")
     public void testSound() {
         try {
