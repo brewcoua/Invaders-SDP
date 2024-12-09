@@ -207,16 +207,18 @@ public class SoundManager {
      *
      * @param sound Key value of sound
      */
-    public void playSound(Sound sound) {
+    public boolean playSound(Sound sound) {
         if (soundEnabled) {
             Clip clip = soundClips.get(sound);
             if (clip != null){
                 clip.setFramePosition(0);
                 clip.start();
+                return true;
             } else {
                 logger.warning("Sound not found: " + sound);
             }
         }
+        return false;
     }
 
     /**

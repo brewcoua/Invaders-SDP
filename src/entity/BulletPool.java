@@ -49,4 +49,8 @@ public final class BulletPool {
   public static void recycle(final Set<Bullet> bullet) {
     pool.addAll(bullet);
   }
+
+  public static void clear() {
+    pool.clear();
+  }
 }
